@@ -238,11 +238,12 @@ containing a value of this type.
         public static final int yammer=0x7f02002d;
     }
     public static final class id {
-        public static final int action_settings=0x7f050010;
+        public static final int action_settings=0x7f050012;
         public static final int btn_revoke_access=0x7f05000d;
         public static final int btn_sign_in=0x7f05000b;
         public static final int btn_sign_out=0x7f05000c;
         public static final int btnlogin=0x7f050006;
+        public static final int discription_text=0x7f050011;
         public static final int emailContainer=0x7f050005;
         public static final int hybrid=0x7f050004;
         public static final int imgProfilePic=0x7f050008;
@@ -252,6 +253,7 @@ containing a value of this type.
         public static final int satellite=0x7f050002;
         public static final int sign_in_button=0x7f05000e;
         public static final int terrain=0x7f050003;
+        public static final int title_text=0x7f050010;
         public static final int txtEmail=0x7f05000a;
         public static final int txtName=0x7f050009;
         public static final int username=0x7f05000f;
@@ -264,6 +266,7 @@ containing a value of this type.
         public static final int activity_main=0x7f030001;
         public static final int google_plus_signin=0x7f030002;
         public static final int home_screen=0x7f030003;
+        public static final int pod=0x7f030004;
     }
     public static final class menu {
         public static final int common_menu=0x7f0a0000;

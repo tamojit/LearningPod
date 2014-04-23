@@ -19,12 +19,15 @@ public class HomeScreenActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		Bundle extras = getIntent().getExtras();
 		String userName = extras.get("username").toString();
+		//get list of pods
+		pods  = (List<PodBean>)extras.getSerializable("pods");
+		
 		setContentView(R.layout.home_screen);
 		
 		TextView txtUserName = (TextView)findViewById(R.id.username);
 		txtUserName.setText("Hello " + userName);
 		// this is only for testing
-		populatePods();
+		//populatePods();
 		
 	}
 	

@@ -1,11 +1,14 @@
 package com.learningpod.android.beans.pods;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class PodBean {
+public class PodBean implements Serializable{
 
 	private String title;
 	private String description;
+	private String scorable;
+	private String userId;
 	private List<PodQuestionBean> podElements = null;
 	
 	

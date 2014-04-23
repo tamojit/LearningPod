@@ -1,10 +1,16 @@
 package com.learningpod.android;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.learningpod.android.activities.HomeScreenActivity;
 import com.learningpod.android.beans.UserProfileBean;
+import com.learningpod.android.beans.pods.PodBean;
+import com.learningpod.android.parser.GenericParser;
+import com.learningpod.android.parser.ParserFactory;
 import com.learningpod.android.parser.ParserType;
 import com.learningpod.android.rest.HttpRestServiceHandler;
 import com.learningpod.android.rest.RestServiceHandlerFactory;
@@ -18,8 +24,10 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 
 
@@ -88,14 +96,39 @@ public class BackgroundAsyncTasks extends AsyncTask<BackgroundTasks, Integer, Ob
 		}
 		if(task==BackgroundTasks.SELECTED_ACCOUNT_AUTHENTICATION){
 			UserProfileBean userBean = (UserProfileBean)result;
+			ArrayList<PodBean> pods = new ArrayList<PodBean>();
+			AssetManager assetManager = currentActivity.getAssets();
 			// fetch the list of PODS 
-			
+			 try{
+				 String[] listOfPods = assetManager.list("pods");
+				 for(String pod :listOfPods){
+					if(assetManager.list("pods/" + pod).length>0){
+						// this is a folder
+						continue;
+					}
+					InputStream is =  assetManager.open("pods/" + pod);
+					pods.add((PodBean)parseUtility(is, ParserType.POD_PARSER));
+				 }
+			 }catch(IOException e){
+				 Log.e("LearningPod","pod xmls not found");
+			 }catch(LearningpodException e){
+				 Log.e("LearningPod","Error in parsing Pod xml");
+			 }
+			 
+			//parser.parse(iStream);
 			Intent intent = new Intent(currentActivity,HomeScreenActivity.class);
 			intent.putExtra("username", userBean.getName());
+			intent.putExtra("pods",pods);
 			currentActivity.startActivity(intent);
 			
 		}
 		
+	}
+	
+	private Object parseUtility(InputStream is,ParserType type) throws LearningpodException{
+		GenericParser parser = ParserFactory.getParser(type);
+		parser.parse(is);
+		return parser.retrieveSerializedObject();
 	}
 	
 	private boolean listAssetFiles(String path) {

@@ -21,6 +21,7 @@ public class PodParser implements GenericParser {
 	public void parse(InputStream iStream) throws LearningpodException {
 		// TODO Auto-generated method stub
 		XStream xs = new XStream();
+		
 		xs.autodetectAnnotations(true);
 		// set aliases
 		xs.alias("pod",PodBean.class);

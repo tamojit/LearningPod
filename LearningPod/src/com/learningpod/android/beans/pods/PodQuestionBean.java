@@ -18,20 +18,21 @@ public class PodQuestionBean implements Serializable {
 	@XStreamAsAttribute
 	private String score;
 	@XStreamAsAttribute
-	private String questionNumber;
+	private String questionNumber;	
+	private List<PodQuestionExplanation> explanations = null;
 	
 	
-	private List<PodQuestionBean> explanations = null;
+	
 	public String getItemId() {
 		return itemId;
 	}
 	public void setItemId(String itemId) {
 		this.itemId = itemId;
 	}
-	public List<PodQuestionBean> getArr() {
+	public List<PodQuestionExplanation> getExplanations() {
 		return explanations;
 	}
-	public void setArr(List<PodQuestionBean> explanations) {
+	public void setExplanations(List<PodQuestionExplanation> explanations) {
 		this.explanations = explanations;
 	}
 	

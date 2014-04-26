@@ -9,6 +9,12 @@ public class ParserFactory {
 		else if(type==ParserType.POD_PARSER){
 			return new PodParser();
 		}
+		else if(type==ParserType.QUESTION_PARSER){
+			return new QuestionParser();
+		}
+		else if(type==ParserType.EXPLANATION_PARSER){
+			return new ExplanationParser();
+		}		
 		return null;
 	}
 }

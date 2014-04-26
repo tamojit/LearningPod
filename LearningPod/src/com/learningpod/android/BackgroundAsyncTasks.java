@@ -7,8 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.learningpod.android.activities.HomeScreenActivity;
+import com.learningpod.android.activities.PodQuestionActivity;
 import com.learningpod.android.beans.UserProfileBean;
+import com.learningpod.android.beans.explanations.ExplanationBean;
 import com.learningpod.android.beans.pods.PodBean;
+import com.learningpod.android.beans.pods.PodQuestionBean;
+import com.learningpod.android.beans.pods.PodQuestionExplanation;
+import com.learningpod.android.beans.questions.QuestionBean;
 import com.learningpod.android.parser.GenericParser;
 import com.learningpod.android.parser.ParserFactory;
 import com.learningpod.android.parser.ParserType;
@@ -78,9 +83,49 @@ public class BackgroundAsyncTasks extends AsyncTask<BackgroundTasks, Integer, Ob
 				}
 			}else{
 				// auth token not recieved. user may not have allowed access.
+				return null;
 			}
 			
-			return userProfileBean ;
+			return userProfileBean.getName() ;
+		}
+		
+		else if(task==BackgroundTasks.GMAIL_ACCOUNT_AUTHENTICATION){
+			String username = params.get("username").toString();
+			this.task = BackgroundTasks.SELECTED_ACCOUNT_AUTHENTICATION;
+			return username;
+		}
+		
+		else if(task==BackgroundTasks.LOAD_POD_QUESTIONS){
+			PodBean selectedPod = (PodBean)params.get("selectedPod");
+			AssetManager assetMgr = currentActivity.getAssets();
+			ArrayList<QuestionBean> questions = new  ArrayList<QuestionBean>();			
+			ArrayList<ArrayList<ExplanationBean>> explanations = new ArrayList<ArrayList<ExplanationBean>>();
+			for(PodQuestionBean ques :selectedPod.getPodElements()){
+				try {
+					InputStream is = assetMgr.open("pods/questions/"+ ques.getItemId() + ".xml");
+					questions.add((QuestionBean)parseUtility(is, ParserType.QUESTION_PARSER));
+					
+					// get explanations for a question
+					ArrayList<ExplanationBean> explanationsForThisQues = new ArrayList<ExplanationBean>();
+					for(PodQuestionExplanation exp :ques.getExplanations()){
+						InputStream isExp = assetMgr.open("pods/explanation/"+ exp.getItemId() + ".xml");
+						explanationsForThisQues.add((ExplanationBean)parseUtility(isExp, ParserType.EXPLANATION_PARSER));
+					}
+					explanations.add(explanationsForThisQues);
+					
+					
+				} catch (IOException e) {
+					Log.e("LearningPod","pod xmls not found");
+				}catch(LearningpodException e){
+					 Log.e("LearningPod","Error in parsing Pod xml");
+				}
+			}
+			HashMap<String,Object> passParamsToPostExecute = new HashMap<String, Object>();
+			passParamsToPostExecute.put("questions", questions);
+			passParamsToPostExecute.put("selectedPod", selectedPod);
+			passParamsToPostExecute.put("explanations", explanations);
+			
+			return passParamsToPostExecute;
 		}
 		
 		return null;
@@ -89,13 +134,14 @@ public class BackgroundAsyncTasks extends AsyncTask<BackgroundTasks, Integer, Ob
 	@Override
 	protected void onPostExecute(Object result) {
 		// TODO Auto-generated method stub
-		currentActivity.getProgressDialog().hide();
+		//currentActivity.getProgressDialog().hide();
 		if(result==null){
 			// something went wrong
+			currentActivity.getProgressDialog().hide();
 			return;
 		}
 		if(task==BackgroundTasks.SELECTED_ACCOUNT_AUTHENTICATION){
-			UserProfileBean userBean = (UserProfileBean)result;
+			String userName  = result.toString();
 			ArrayList<PodBean> pods = new ArrayList<PodBean>();
 			AssetManager assetManager = currentActivity.getAssets();
 			// fetch the list of PODS 
@@ -117,10 +163,28 @@ public class BackgroundAsyncTasks extends AsyncTask<BackgroundTasks, Integer, Ob
 			 
 			//parser.parse(iStream);
 			Intent intent = new Intent(currentActivity,HomeScreenActivity.class);
-			intent.putExtra("username", userBean.getName());
+			intent.putExtra("username", userName);
 			intent.putExtra("pods",pods);
 			currentActivity.startActivity(intent);
+			currentActivity.getProgressDialog().hide();
 			
+		}else if(task==BackgroundTasks.LOAD_POD_QUESTIONS){
+			
+			HashMap<String, Object> paramsFromDoInBackground = (HashMap<String, Object>)result;
+			//get the selected pod
+			PodBean selectedPod = (PodBean)paramsFromDoInBackground.get("selectedPod");
+			//get the Pod questions			
+			ArrayList<QuestionBean> questions = (ArrayList<QuestionBean>)paramsFromDoInBackground.get("questions");
+			// get the explanations
+			ArrayList<ArrayList<ExplanationBean>> explanations = (ArrayList<ArrayList<ExplanationBean>>) paramsFromDoInBackground.get("explanations");
+			// create the intent
+			Intent intent = new Intent(currentActivity,PodQuestionActivity.class);
+			//put objects into extra
+			intent.putExtra("questions",questions);
+			intent.putExtra("selectedPod", selectedPod);
+			intent.putExtra("explanations",explanations );
+			currentActivity.startActivity(intent);
+			currentActivity.getProgressDialog().hide();
 		}
 		
 	}

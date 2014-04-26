@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#445766" >
+    
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" >
+        
+     <LinearLayout android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:orientation="vertical">
+ 
+    
+   <LinearLayout android:layout_width="match_parent"
+       android:layout_height="wrap_content" android:orientation="vertical">
+       
+       <TextView
+        android:id = "@+id/podname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:fontFamily="Museo300"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="80dp"
+        android:text = "Context Clues -  Level A "
+         />
+       
+           
+       <TextView
+        android:id = "@+id/poddesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:textSize="13sp"  
+        android:layout_marginTop="0dp"      
+        android:layout_marginLeft="80dp"
+        android:text = "Determine the meaning of the unknown content"
+         />
+       
+   </LinearLayout> 
+   
+   <LinearLayout android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_marginLeft="35dp"
+       android:layout_marginRight="35dp"
+       android:layout_marginBottom="20dp"
+       android:background="#CEF6F5"
+       android:orientation="horizontal"
+       android:weightSum="1"
+       >
+       
+        <LinearLayout 
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:layout_height="match_parent"        
+        android:layout_gravity= "center"
+                
+        android:orientation="vertical"
+        
+        android:layout_margin="5dp"
+        > <!--  android:background="#DF01D7" -->
+
+            <ImageView
+                android:id = "@+id/quesimage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/refimg" 
+                android:adjustViewBounds="true"
+                 />
+            
+             <TextView
+		        android:id = "@+id/quesbody"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:textColor="#000000"
+		        android:textSize="15sp"      
+		        android:layout_margin="5dp"
+		        android:text = "Read the sentence. Use context clues to help you figure out the meaning of the word jovial. Then, choose the correct meaning of the word jovial"
+        	 />
+             
+             <LinearLayout 
+                 android:id = "@+id/explanationcontainer"
+                 android:layout_height="fill_parent"
+                 android:layout_width="match_parent"
+                 android:layout_marginLeft="5dp"
+                 android:layout_marginRight="5dp"
+                 android:layout_marginBottom="5dp"
+                 android:layout_marginTop="10dp"
+                 android:orientation="vertical"
+                 android:background="#58FAF4">
+                 
+                 <TextView 
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_marginLeft="80dp"
+                     android:layout_marginTop="10dp"
+                     android:textSize="20sp"
+                     android:textColor="#08088A"
+                     android:text = "Explanation"/>
+                 
+                  <TextView 
+                     android:id ="@+id/explanationcontent"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_marginLeft="80dp"
+                     android:layout_marginTop="10dp"
+                     android:textSize="15sp"
+                     android:textColor="#000000"
+                     android:text = "Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation"/>
+                 
+             </LinearLayout>
+             
+            
+        </LinearLayout>
+        
+        <LinearLayout 
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:layout_height="match_parent"        
+        android:layout_gravity= "center"                
+        android:orientation="vertical"        
+        android:layout_margin="5dp"
+    
+        > <!-- android:background="#AEB404" -->
+            
+          
+            
+            <TextView
+		        android:id = "@+id/quesbody"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:textColor="#000000"
+		        android:textSize="13sp"  
+		        android:layout_marginLeft="15dp"
+		        android:layout_marginBottom="3dp"
+		        android:layout_marginTop="20dp"
+		        android:text = "CHOSE THE CORRECT ANSWER"
+         	/>
+            <View
+			    android:layout_width="fill_parent"
+			    android:layout_height="1dp"		
+			    android:layout_marginLeft="15dp"
+			    android:background="#000000"
+		     />
+            
+            <LinearLayout
+                android:id="@+id/choicecontainer"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="vertical">
+                
+                
+                
+            </LinearLayout>
+            
+            <Button android:layout_width="120dp" 
+                android:id="@+id/btnsubmitnext"
+                android:layout_gravity="center"
+                android:layout_height="30dp"
+                android:textSize="15sp"
+                android:text = "SUBMIT"
+                android:background="@drawable/custom_button_orange"
+                android:layout_marginTop="20dp"
+                />
+            
+        </LinearLayout>
+       
+   </LinearLayout>
+   </LinearLayout>
+   
+	</ScrollView>    
+
+</LinearLayout>

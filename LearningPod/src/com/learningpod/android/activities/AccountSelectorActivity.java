@@ -12,18 +12,20 @@ import com.learningpod.android.BackgroundAsyncTasks;
 import com.learningpod.android.BackgroundTasks;
 import com.learningpod.android.BaseActivity;
 import com.learningpod.android.R;
+
 import android.os.Bundle;
 import android.accounts.Account;
 import android.accounts.AccountManager;
-
 import android.app.ActionBar.LayoutParams;
 import android.content.Intent;
-
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -54,17 +56,16 @@ public class AccountSelectorActivity extends BaseActivity
 		
 		LinearLayout emailButtonContainer = (LinearLayout)findViewById(R.id.emailContainer);
 		Button emailButton = null;
-		LayoutParams buttonParams = new LayoutParams(550,LayoutParams.WRAP_CONTENT);
-		buttonParams.gravity  = Gravity.CENTER;
+		LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(400,LayoutParams.WRAP_CONTENT);		
+		buttonParams.topMargin=20;
 		for(Account account : accounts){
-			//Added for testing on emulator. To be removed for devices
-			/*if(!account.name.contains("gmail")){
-				continue;
-			}*/
-			emailButton = new Button(this);
+			
+			emailButton = new Button(this);			
 			emailButton.setLayoutParams(buttonParams);
 			emailButton.setText(account.name);
 			emailButton.setOnClickListener(this);
+			emailButton.setBackgroundResource(R.drawable.custom_button);
+			emailButton.setTextColor(Color.parseColor("#ffffff"));
 			emailButtonContainer.addView(emailButton);			
 		}
 		
@@ -113,15 +114,21 @@ public class AccountSelectorActivity extends BaseActivity
 	    public void onComplete(Bundle values) {
 	        //successful authentication..
 	    	Log.v("auth", "successfull");
+	    	getProgressDialog().setMessage("Authenticating...");
+	    	getProgressDialog().show();
 	    	Profile profileMap = adapter.getUserProfile();
 	    	if(profileMap!=null){
-	    		Log.v("auth",profileMap.getFirstName());
-	    		Intent intent = new Intent(AccountSelectorActivity.this,HomeScreenActivity.class);
-				intent.putExtra("username", profileMap.getFirstName());
-				AccountSelectorActivity.this.startActivity(intent);
+	    		HashMap<String, Object> params = new HashMap<String, Object>();
+		    	params.put("username", profileMap.getFirstName());
+		    	new BackgroundAsyncTasks(AccountSelectorActivity.this, params).
+		    							execute(BackgroundTasks.GMAIL_ACCOUNT_AUTHENTICATION);
 				// sign out before going to the next screen
 				adapter.signOut(AccountSelectorActivity.this.getApplicationContext(), Provider.GOOGLEPLUS.toString());
 	    	}
+	    	
+	    	
+	    	
+	    	
 	    	
 	    }
 

@@ -1,13 +1,16 @@
 package com.learningpod.android;
 
 import com.learningpod.android.activities.AccountSelectorActivity;
+import com.learningpod.android.activities.HomeScreenActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 
 
 public class BaseActivity  extends Activity implements DialogInterface.OnClickListener {
@@ -15,6 +18,8 @@ public class BaseActivity  extends Activity implements DialogInterface.OnClickLi
 	private ProgressDialog progressDialog;
 	private AlertDialog alertDialog;
 	
+	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
@@ -29,6 +34,8 @@ public class BaseActivity  extends Activity implements DialogInterface.OnClickLi
 		this.alertDialog.setCancelable(false);
 	}
 	
+	
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -39,6 +46,23 @@ public class BaseActivity  extends Activity implements DialogInterface.OnClickLi
 		return true;
 	}
 	
+	
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		// TODO Auto-generated method stub
+		 
+		if(item.getItemId()==R.id.action_settings){
+			/*Intent intent = new Intent(this,HomeScreenActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);*/
+			if(!(this instanceof HomeScreenActivity)){
+				this.finish();
+			}
+			
+		}
+		return true;
+	}
+
 	
 	public ProgressDialog getProgressDialog() {
 		return this.progressDialog;
@@ -59,6 +83,10 @@ public class BaseActivity  extends Activity implements DialogInterface.OnClickLi
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
+	
+	
 
 	
 }

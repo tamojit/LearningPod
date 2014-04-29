@@ -16,7 +16,7 @@
                         android:layout_height="30dp"
                         android:background="@drawable/graya"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="20dp"
                         />
                     
                     <TextView
@@ -27,7 +27,7 @@
 				        android:textSize="15sp"  
 				        android:layout_marginLeft="15dp"
 				        android:layout_marginTop="20dp"
-				        android:layout_marginBottom="20dp"
+				        android:layout_marginBottom="20dp"				        
 				        android:text = "Thoughtful and Serious"
 		         	/>
                     

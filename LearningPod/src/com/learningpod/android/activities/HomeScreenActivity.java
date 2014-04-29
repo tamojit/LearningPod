@@ -29,10 +29,14 @@ import android.widget.Toast;
 
 
 
+
+
 import com.learningpod.android.BackgroundAsyncTasks;
 import com.learningpod.android.BackgroundTasks;
 import com.learningpod.android.BaseActivity;
+import com.learningpod.android.ContentCacheStore;
 import com.learningpod.android.R;
+import com.learningpod.android.beans.UserProfileBean;
 import com.learningpod.android.beans.pods.PodBean;
 
 
@@ -43,15 +47,14 @@ public class HomeScreenActivity extends BaseActivity implements OnClickListener 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle extras = getIntent().getExtras();
-		String userName = extras.get("username").toString();
-		//get list of pods
-		pods  = (List<PodBean>)extras.getSerializable("pods");
-		
+		// get user profile and pods from content cache
+		UserProfileBean userProfileBean = ContentCacheStore.getContentCache().getLoggedInUserProfile();		
+		//get list of pods. getting 
+		pods  = ContentCacheStore.getContentCache().getPods();		
 		setContentView(R.layout.home_screen);
 		
 		TextView txtUserName = (TextView)findViewById(R.id.username);
-		txtUserName.setText("Hello, " + userName + "!");
+		txtUserName.setText("Hello, " + userProfileBean.getName() + "!");
 		// this is only for testing
 		//populatePods();
 		

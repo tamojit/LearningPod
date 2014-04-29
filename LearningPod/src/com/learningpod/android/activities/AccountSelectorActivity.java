@@ -12,6 +12,7 @@ import com.learningpod.android.BackgroundAsyncTasks;
 import com.learningpod.android.BackgroundTasks;
 import com.learningpod.android.BaseActivity;
 import com.learningpod.android.R;
+import com.learningpod.android.beans.UserProfileBean;
 
 import android.os.Bundle;
 import android.accounts.Account;
@@ -21,6 +22,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -28,11 +30,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-
-
-
-
-
 
 public class AccountSelectorActivity extends BaseActivity 
 						implements OnClickListener {
@@ -56,7 +53,9 @@ public class AccountSelectorActivity extends BaseActivity
 		
 		LinearLayout emailButtonContainer = (LinearLayout)findViewById(R.id.emailContainer);
 		Button emailButton = null;
-		LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(400,LayoutParams.WRAP_CONTENT);		
+		int buttonWidthInDp = 300;
+		int buttonWidthInPx = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, buttonWidthInDp, getResources().getDisplayMetrics());
+		LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(buttonWidthInPx,LayoutParams.WRAP_CONTENT);		
 		buttonParams.topMargin=20;
 		for(Account account : accounts){
 			
@@ -117,9 +116,17 @@ public class AccountSelectorActivity extends BaseActivity
 	    	getProgressDialog().setMessage("Authenticating...");
 	    	getProgressDialog().show();
 	    	Profile profileMap = adapter.getUserProfile();
+	    	// convert profile object to user profile object used in the application
+	    	UserProfileBean userProfile = new UserProfileBean();
+	    	userProfile.setName(profileMap.getFullName());
+	    	userProfile.setGender(profileMap.getGender());
+	    	userProfile.setId(profileMap.getValidatedId());
+	    	
+	    	
+	    	
 	    	if(profileMap!=null){
 	    		HashMap<String, Object> params = new HashMap<String, Object>();
-		    	params.put("username", profileMap.getFirstName());
+		    	params.put("userProfile", userProfile);
 		    	new BackgroundAsyncTasks(AccountSelectorActivity.this, params).
 		    							execute(BackgroundTasks.GMAIL_ACCOUNT_AUTHENTICATION);
 				// sign out before going to the next screen

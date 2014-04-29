@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 public class QuestionBodyBean implements Serializable{
 
+	private String questionBodyHighlighted;	
+	private String questionBodyStr;
+	private String questionImage;
+	
+	
 	public String getQuestionBodyStr() {
 		return questionBodyStr;
 	}
@@ -16,6 +21,11 @@ public class QuestionBodyBean implements Serializable{
 	public void setQuestionImage(String questionImage) {
 		this.questionImage = questionImage;
 	}
-	private String questionBodyStr;
-	private String questionImage;
+	public String getQuestionBodyHighlighted() {
+		return questionBodyHighlighted;
+	}
+	public void setQuestionBodyHighlighted(String questionBodyHighlighted) {
+		this.questionBodyHighlighted = questionBodyHighlighted;
+	}
+	
 }

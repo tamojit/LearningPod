@@ -29,5 +29,6 @@ public class QuestionParser implements GenericParser {
 		question = (QuestionBean)xs.fromXML(iStream);
 		
 	}
-
+	
+	
 }

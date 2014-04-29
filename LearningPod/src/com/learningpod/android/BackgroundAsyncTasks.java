@@ -61,10 +61,19 @@ public class BackgroundAsyncTasks extends AsyncTask<BackgroundTasks, Integer, Ob
 		// TODO Auto-generated method stub
 		this.task = tasks[0];
 		
+		
+		
 		// REST service handler for all rest service communication
 		HttpRestServiceHandler serviceHandler = RestServiceHandlerFactory
 				.getServiceHandler();
 		if(task==BackgroundTasks.SELECTED_ACCOUNT_AUTHENTICATION){
+			// for testing when there is no Internet connection.
+			boolean testFlag = false;
+			if(testFlag){
+				UserProfileBean userBean = new UserProfileBean();
+				userBean.setName("No Internet Test");
+				return userBean;
+			}
 			// get the selected account 
 			Account selectedAccount = (Account)params.get("selectedAccount");
 			
@@ -76,9 +85,8 @@ public class BackgroundAsyncTasks extends AsyncTask<BackgroundTasks, Integer, Ob
 				HashMap<String, String> urlParams = new HashMap<String, String>();
 				urlParams.put("access_token", authToken);
 				try {
-				 userProfileBean = 	(UserProfileBean)serviceHandler.fireHttpGet(UrlConstants.PROFILE_DATA_FETCH, urlParams, ParserType.PROFILE_DETAILS_PARSER);
-				} catch (LearningpodException e) {
-					
+				 userProfileBean = 	(UserProfileBean)serviceHandler.fireHttpGet(UrlConstants.PROFILE_DATA_FETCH, urlParams, ParserType.PROFILE_DETAILS_PARSER);				
+				} catch (LearningpodException e) {					
 					e.printStackTrace();
 				}
 			}else{
@@ -86,13 +94,13 @@ public class BackgroundAsyncTasks extends AsyncTask<BackgroundTasks, Integer, Ob
 				return null;
 			}
 			
-			return userProfileBean.getName() ;
+			return userProfileBean ;
 		}
 		
 		else if(task==BackgroundTasks.GMAIL_ACCOUNT_AUTHENTICATION){
-			String username = params.get("username").toString();
+			UserProfileBean userProfile = (UserProfileBean)params.get("userProfile");
 			this.task = BackgroundTasks.SELECTED_ACCOUNT_AUTHENTICATION;
-			return username;
+			return userProfile;
 		}
 		
 		else if(task==BackgroundTasks.LOAD_POD_QUESTIONS){
@@ -141,7 +149,8 @@ public class BackgroundAsyncTasks extends AsyncTask<BackgroundTasks, Integer, Ob
 			return;
 		}
 		if(task==BackgroundTasks.SELECTED_ACCOUNT_AUTHENTICATION){
-			String userName  = result.toString();
+			UserProfileBean userProfile  = (UserProfileBean) result;
+			ContentCacheStore.getContentCache().setLoggedInUserProfile(userProfile);
 			ArrayList<PodBean> pods = new ArrayList<PodBean>();
 			AssetManager assetManager = currentActivity.getAssets();
 			// fetch the list of PODS 
@@ -163,8 +172,8 @@ public class BackgroundAsyncTasks extends AsyncTask<BackgroundTasks, Integer, Ob
 			 
 			//parser.parse(iStream);
 			Intent intent = new Intent(currentActivity,HomeScreenActivity.class);
-			intent.putExtra("username", userName);
-			intent.putExtra("pods",pods);
+			// store the pods for later use in cache content
+			ContentCacheStore.getContentCache().setPods(pods);			
 			currentActivity.startActivity(intent);
 			currentActivity.getProgressDialog().hide();
 			

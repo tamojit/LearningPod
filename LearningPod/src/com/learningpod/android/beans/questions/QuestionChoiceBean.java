@@ -1,17 +1,23 @@
 package com.learningpod.android.beans.questions;
 
 import java.io.Serializable;
+import java.util.List;
 
+import com.learningpod.android.parser.ExplanationConverter;
+import com.learningpod.android.parser.QuestionChoiceConverter;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+import com.thoughtworks.xstream.annotations.XStreamImplicitCollection;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+ 
 
 public class QuestionChoiceBean implements Serializable {
 
-	@XStreamAsAttribute
+	 
 	private String correct;
-	@XStreamAsAttribute
-	private String choiceId;
-	@XStreamAlias("p")
+	private String choiceId;	 
 	private String choiceBody;
 	public String getCorrect() {
 		return correct;
@@ -31,6 +37,11 @@ public class QuestionChoiceBean implements Serializable {
 	public void setChoiceBody(String choiceBody) {
 		this.choiceBody = choiceBody;
 	}
+	
+	
+	
+	 
+	 
 	
 	
 }

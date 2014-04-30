@@ -99,13 +99,6 @@ public class HomeScreenActivity extends BaseActivity implements OnClickListener 
 		pods  = ContentCacheStore.getContentCache().getPods();		
 		setContentView(R.layout.activity_main);
 		
-		/*TextView txtUserName = (TextView)findViewById(R.id.username);
-		txtUserName.setText("Hello, " + userProfileBean.getName() + "!");
-		// this is only for testing
-		//populatePods();
-		
-		LinearLayout scroller = (LinearLayout)findViewById(R.id.horizontalscroller);*/
-		
 		
 		
 		

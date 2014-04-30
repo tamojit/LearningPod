@@ -17,7 +17,7 @@
         android:allowBackup="true"
         android:icon="@drawable/lpicon_small"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/CustomActionBarTheme" >
         <activity
             android:name="com.learningpod.android.activities.AccountSelectorActivity"
             android:label="@string/app_name" android:screenOrientation="landscape" android:configChanges="keyboardHidden|orientation|screenSize">

@@ -8,11 +8,12 @@ import android.util.Log;
 public class LearningpodSqliteHelper extends SQLiteOpenHelper{
 	
 	  public static  String DATABASE_NAME = "lpProddb";
+	  public static final String USER_PROGRESS_TRACKER_TABLE = "UserProgressTracker";
 	  
 	  private static final int DATABASE_VERSION = 1;
 
 	  // Table creation statements
-	  public static final String USER_PROGRESS_TRACKER = "create table UserProgressTracker ( UserId Text Not Null, PodId Text Not Null, QuestionId Text, ChoiceId Text, ChoiceStatus INTEGER);";
+	  public static final String USER_PROGRESS_TRACKER_QUERY = "create table UserProgressTracker ( UserId Text Not Null, PodId Text Not Null, QuestionId Text, ChoiceId Text, ChoiceStatus INTEGER);";
 	 
 	  public LearningpodSqliteHelper(Context context) {
 	    super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -20,7 +21,7 @@ public class LearningpodSqliteHelper extends SQLiteOpenHelper{
 
 	  @Override
 	  public void onCreate(SQLiteDatabase database) {
-	    database.execSQL(USER_PROGRESS_TRACKER);	   
+	    database.execSQL(USER_PROGRESS_TRACKER_QUERY);	   
 	  }
 
 	  @Override

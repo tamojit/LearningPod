@@ -104,7 +104,7 @@ public class BackgroundAsyncTasks extends AsyncTask<BackgroundTasks, Integer, Ob
 		}
 		
 		else if(task==BackgroundTasks.LOAD_POD_QUESTIONS){
-			PodBean selectedPod = (PodBean)params.get("selectedPod");
+			PodBean selectedPod = (PodBean)params.get("selectedPod");			
 			AssetManager assetMgr = currentActivity.getAssets();
 			ArrayList<QuestionBean> questions = new  ArrayList<QuestionBean>();			
 			ArrayList<ArrayList<ExplanationBean>> explanations = new ArrayList<ArrayList<ExplanationBean>>();

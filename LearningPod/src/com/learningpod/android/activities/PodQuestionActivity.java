@@ -7,11 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.learningpod.android.BaseActivity;
+import com.learningpod.android.ContentCacheStore;
 import com.learningpod.android.R;
+import com.learningpod.android.beans.UserProgressInfo;
 import com.learningpod.android.beans.explanations.ExplanationBean;
 import com.learningpod.android.beans.pods.PodBean;
 import com.learningpod.android.beans.questions.QuestionBean;
 import com.learningpod.android.beans.questions.QuestionChoiceBean;
+import com.learningpod.android.db.LearningpodDbHandler;
 import com.learningpod.android.parser.GenericParser;
 import com.learningpod.android.parser.ParserFactory;
 import com.learningpod.android.parser.ParserType;
@@ -73,7 +76,11 @@ public class PodQuestionActivity extends BaseActivity {
 		podTitleView.setText(selectedPod.getTitle());
 		TextView podDescView = (TextView)findViewById(R.id.poddesc);
 		podDescView.setText(selectedPod.getDescription());	
-		
+		// get the current question number for this pod and user id combination
+		LearningpodDbHandler dbHandler = new LearningpodDbHandler(this);
+		dbHandler.open();
+		currentQuestionIndex = dbHandler.getUserProgressStatus(ContentCacheStore.getContentCache().getLoggedInUserProfile().getId(), selectedPod.getPodId());
+		dbHandler.close();
 		
 		
 		// enable disable content based on screen state
@@ -168,6 +175,8 @@ public class PodQuestionActivity extends BaseActivity {
 					}
 				}else{
 					// clicking the submit button in Question screen
+					// save the selected option in DB
+					saveSelectedChoiceInDb();					
 					isCurrentScreenForExplanation = true;
 					enableScreenState();
 					
@@ -176,6 +185,27 @@ public class PodQuestionActivity extends BaseActivity {
 		});
 	}
 	
+	private void saveSelectedChoiceInDb(){
+		// get the  question's item id from pod bean
+		String questionItemId = selectedPod.getPodElements().get(currentQuestionIndex).getItemId();
+		// get the user id of the logged in user
+		String userId = ContentCacheStore.getContentCache().getLoggedInUserProfile().getId();
+		//get the pod id 
+		String podId = selectedPod.getPodId();
+		// get the selected choice id
+		String choiceId = questions.get(currentQuestionIndex).getChoiceQuestion().getChoiceInteraction().get(currentSelectedChoiceIndex).getChoiceId();
+		UserProgressInfo userProgress = new UserProgressInfo();
+		userProgress.setUserId(userId);
+		userProgress.setPodId(podId);
+		userProgress.setQuestionId(questionItemId);
+		userProgress.setChoiceId(choiceId);
+		userProgress.setChoiceCorrect(isCurrentSelectedChoiceCorrect);
+		// create a db handler and open the connection
+		LearningpodDbHandler handler = new LearningpodDbHandler(this);
+		handler.open();
+		handler.saveUserProgressInfo(userProgress);
+		handler.close();
+	}
 	
 	private void showNextQuestion(){
 		
@@ -203,8 +233,7 @@ public class PodQuestionActivity extends BaseActivity {
 			}
 		}
 		
-		// get the  question's item id from pod bean
-		String questionItemId = selectedPod.getPodElements().get(currentQuestionIndex).getItemId();
+		
 		// get the next question bean
 		QuestionBean nextQuestion = questions.get(currentQuestionIndex);		
 		// set the question body

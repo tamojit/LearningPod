@@ -42,7 +42,7 @@ public class BaseActivity  extends Activity implements DialogInterface.OnClickLi
 		// Inflate the menu; this adds items to the action bar if it is present.
 		if(!(this instanceof AccountSelectorActivity)){
 			getMenuInflater().inflate(R.menu.common_menu, menu);
-		}		
+		}
 		return true;
 	}
 	
@@ -50,17 +50,26 @@ public class BaseActivity  extends Activity implements DialogInterface.OnClickLi
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		// TODO Auto-generated method stub
-		 
-		if(item.getItemId()==R.id.action_settings){
-			/*Intent intent = new Intent(this,HomeScreenActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);*/
-			if(!(this instanceof HomeScreenActivity)){
+		if(!((this instanceof AccountSelectorActivity) ||  (this instanceof HomeScreenActivity))){
+			if(item.getItemId()==R.id.homemenu){
+				Intent intent = new Intent(this,HomeScreenActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
 				this.finish();
+			}			
+			else if(item.getItemId()==R.id.help){
+				
 			}
-			
+			else if(item.getItemId()==R.id.about){
+				
+			}
+			else if(item.getItemId()==R.id.terms){
+				
+			}
+			return true;
+		}else{
+			return false;
 		}
-		return true;
 	}
 
 	

@@ -8,6 +8,12 @@
 package com.learningpod.android;
 
 public final class R {
+    public static final class array {
+        /**  Nav Drawer List Item Icons 
+ Keep them in order as the titles are in 
+         */
+        public static final int nav_drawer_icons=0x7f090000;
+    }
     public static final class attr {
         /** 
     The size of the ad. It must be one of BANNER, FULL_BANNER, LEADERBOARD,
@@ -176,8 +182,14 @@ containing a value of this type.
         public static final int common_signin_btn_light_text_disabled=0x7f040006;
         public static final int common_signin_btn_light_text_focused=0x7f040007;
         public static final int common_signin_btn_light_text_pressed=0x7f040005;
-        public static final int common_signin_btn_text_dark=0x7f04000a;
-        public static final int common_signin_btn_text_light=0x7f04000b;
+        public static final int common_signin_btn_text_dark=0x7f040010;
+        public static final int common_signin_btn_text_light=0x7f040011;
+        public static final int counter_text_bg=0x7f04000e;
+        public static final int counter_text_color=0x7f04000f;
+        public static final int list_background=0x7f04000b;
+        public static final int list_background_pressed=0x7f04000c;
+        public static final int list_divider=0x7f04000d;
+        public static final int list_item_title=0x7f04000a;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -221,83 +233,101 @@ containing a value of this type.
         public static final int common_signin_btn_text_normal_light=0x7f02001c;
         public static final int common_signin_btn_text_pressed_dark=0x7f02001d;
         public static final int common_signin_btn_text_pressed_light=0x7f02001e;
-        public static final int custom_button=0x7f02001f;
-        public static final int custom_button_orange=0x7f020020;
-        public static final int dotblue=0x7f020021;
-        public static final int dotwhite=0x7f020022;
-        public static final int email=0x7f020023;
-        public static final int facebook=0x7f020024;
-        public static final int foursquare=0x7f020025;
-        public static final int google=0x7f020026;
-        public static final int googlelogin=0x7f020027;
-        public static final int googleplus=0x7f020028;
-        public static final int graya=0x7f020029;
-        public static final int grayb=0x7f02002a;
-        public static final int grayc=0x7f02002b;
-        public static final int grayd=0x7f02002c;
-        public static final int greena=0x7f02002d;
-        public static final int greenb=0x7f02002e;
-        public static final int greenc=0x7f02002f;
-        public static final int greend=0x7f020030;
-        public static final int homebutton=0x7f020031;
-        public static final int ic_launcher=0x7f020032;
-        public static final int ic_plusone_medium_off_client=0x7f020033;
-        public static final int ic_plusone_small_off_client=0x7f020034;
-        public static final int ic_plusone_standard_off_client=0x7f020035;
-        public static final int ic_plusone_tall_off_client=0x7f020036;
-        public static final int layout_gradient=0x7f020037;
-        public static final int linkedin=0x7f020038;
-        public static final int loginpannel=0x7f020039;
-        public static final int lpicon_small=0x7f02003a;
-        public static final int lplogo=0x7f02003b;
-        public static final int mms=0x7f02003c;
-        public static final int myspace=0x7f02003d;
-        public static final int reda=0x7f02003e;
-        public static final int redb=0x7f02003f;
-        public static final int redc=0x7f020040;
-        public static final int redd=0x7f020041;
-        public static final int refimg=0x7f020042;
-        public static final int runkeeper=0x7f020043;
-        public static final int salesforce=0x7f020044;
-        public static final int twitter=0x7f020045;
-        public static final int yahoo=0x7f020046;
-        public static final int yammer=0x7f020047;
+        public static final int counter_bg=0x7f02001f;
+        public static final int custom_button=0x7f020020;
+        public static final int custom_button_orange=0x7f020021;
+        public static final int dotblue=0x7f020022;
+        public static final int dotwhite=0x7f020023;
+        public static final int email=0x7f020024;
+        public static final int facebook=0x7f020025;
+        public static final int foursquare=0x7f020026;
+        public static final int google=0x7f020027;
+        public static final int googlelogin=0x7f020028;
+        public static final int googleplus=0x7f020029;
+        public static final int graya=0x7f02002a;
+        public static final int grayb=0x7f02002b;
+        public static final int grayc=0x7f02002c;
+        public static final int grayd=0x7f02002d;
+        public static final int greena=0x7f02002e;
+        public static final int greenb=0x7f02002f;
+        public static final int greenc=0x7f020030;
+        public static final int greend=0x7f020031;
+        public static final int homebutton=0x7f020032;
+        public static final int ic_drawer=0x7f020033;
+        public static final int ic_launcher=0x7f020034;
+        public static final int ic_plusone_medium_off_client=0x7f020035;
+        public static final int ic_plusone_small_off_client=0x7f020036;
+        public static final int ic_plusone_standard_off_client=0x7f020037;
+        public static final int ic_plusone_tall_off_client=0x7f020038;
+        public static final int layout_gradient=0x7f020039;
+        public static final int linkedin=0x7f02003a;
+        public static final int list_item_bg_normal=0x7f02003b;
+        public static final int list_item_bg_pressed=0x7f02003c;
+        public static final int list_selector=0x7f02003d;
+        public static final int loginpannel=0x7f02003e;
+        public static final int lpicon_small=0x7f02003f;
+        public static final int lplogo=0x7f020040;
+        public static final int mms=0x7f020041;
+        public static final int myspace=0x7f020042;
+        public static final int planet=0x7f020043;
+        public static final int planetbig=0x7f020044;
+        public static final int reda=0x7f020045;
+        public static final int redb=0x7f020046;
+        public static final int redc=0x7f020047;
+        public static final int redd=0x7f020048;
+        public static final int refimg=0x7f020049;
+        public static final int runkeeper=0x7f02004a;
+        public static final int salesforce=0x7f02004b;
+        public static final int twitter=0x7f02004c;
+        public static final int yahoo=0x7f02004d;
+        public static final int yammer=0x7f02004e;
     }
     public static final class id {
-        public static final int action_settings=0x7f050021;
-        public static final int btn_revoke_access=0x7f05000d;
-        public static final int btn_sign_in=0x7f05000b;
-        public static final int btn_sign_out=0x7f05000c;
+        public static final int about=0x7f05002a;
+        public static final int btn_revoke_access=0x7f050010;
+        public static final int btn_sign_in=0x7f05000e;
+        public static final int btn_sign_out=0x7f05000f;
         public static final int btnlogin=0x7f050006;
-        public static final int btnselectchoice=0x7f05000e;
-        public static final int btnsubmitnext=0x7f050020;
-        public static final int choicebody=0x7f05000f;
-        public static final int choicecontainer=0x7f05001f;
-        public static final int choicelabel=0x7f05001e;
-        public static final int discription_text=0x7f050014;
+        public static final int btnselectchoice=0x7f050011;
+        public static final int btnsubmitnext=0x7f050028;
+        public static final int choicebody=0x7f050012;
+        public static final int choicecontainer=0x7f050027;
+        public static final int choicelabel=0x7f050026;
+        public static final int counter=0x7f050015;
+        public static final int discription_text=0x7f05001c;
+        public static final int drawer_layout=0x7f050007;
         public static final int emailContainer=0x7f050005;
-        public static final int explanationcontainer=0x7f05001c;
-        public static final int explanationcontent=0x7f05001d;
-        public static final int horizontalscroller=0x7f050012;
+        public static final int explanationcontainer=0x7f050024;
+        public static final int explanationcontent=0x7f050025;
+        public static final int frame_container=0x7f050008;
+        public static final int help=0x7f05002b;
+        public static final int homelabel1=0x7f050017;
+        public static final int homelabel2=0x7f050018;
+        public static final int homemenu=0x7f05002c;
+        public static final int horizontalscroller=0x7f05001a;
         public static final int hybrid=0x7f050004;
-        public static final int imgProfilePic=0x7f050008;
-        public static final int llProfile=0x7f050007;
+        public static final int icon=0x7f050013;
+        public static final int imgProfilePic=0x7f05000b;
+        public static final int list_slidermenu=0x7f050009;
+        public static final int llProfile=0x7f05000a;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
-        public static final int poddesc=0x7f050016;
-        public static final int podname=0x7f050017;
-        public static final int podtitle=0x7f050015;
-        public static final int quesbody=0x7f05001b;
-        public static final int quesbodyhighlighted=0x7f05001a;
-        public static final int quesimage=0x7f050019;
-        public static final int questionprogresscontainer=0x7f050018;
+        public static final int poddesc=0x7f05001e;
+        public static final int podname=0x7f05001f;
+        public static final int podtitle=0x7f05001d;
+        public static final int quesbody=0x7f050023;
+        public static final int quesbodyhighlighted=0x7f050022;
+        public static final int quesimage=0x7f050021;
+        public static final int questionprogresscontainer=0x7f050020;
         public static final int satellite=0x7f050002;
-        public static final int sign_in_button=0x7f050010;
+        public static final int sign_in_button=0x7f050019;
+        public static final int terms=0x7f050029;
         public static final int terrain=0x7f050003;
-        public static final int title_text=0x7f050013;
-        public static final int txtEmail=0x7f05000a;
-        public static final int txtName=0x7f050009;
-        public static final int username=0x7f050011;
+        public static final int title=0x7f050014;
+        public static final int title_text=0x7f05001b;
+        public static final int txtEmail=0x7f05000d;
+        public static final int txtName=0x7f05000c;
+        public static final int username=0x7f050016;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f070000;
@@ -305,16 +335,18 @@ containing a value of this type.
     public static final class layout {
         public static final int activity_account_selector=0x7f030000;
         public static final int activity_main=0x7f030001;
-        public static final int choice_view=0x7f030002;
-        public static final int google_plus_signin=0x7f030003;
-        public static final int home_screen=0x7f030004;
-        public static final int pod=0x7f030005;
-        public static final int pod_view=0x7f030006;
-        public static final int questionlayout=0x7f030007;
+        public static final int activity_main_old=0x7f030002;
+        public static final int choice_view=0x7f030003;
+        public static final int drawer_list_item=0x7f030004;
+        public static final int fragment_home=0x7f030005;
+        public static final int google_plus_signin=0x7f030006;
+        public static final int home_screen=0x7f030007;
+        public static final int pod=0x7f030008;
+        public static final int pod_view=0x7f030009;
+        public static final int questionlayout=0x7f03000a;
     }
     public static final class menu {
-        public static final int common_menu=0x7f0a0000;
-        public static final int main=0x7f0a0001;
+        public static final int common_menu=0x7f0b0000;
     }
     public static final class string {
         public static final int Account_Selector=0x7f06001e;
@@ -416,6 +448,11 @@ containing a value of this type.
         /**  Long form sign-in button text [CHAR LIMIT=30] 
          */
         public static final int common_signin_button_text_long=0x7f060013;
+        /**  Content Description 
+         */
+        public static final int desc_list_item_icon=0x7f060023;
+        public static final int drawer_close=0x7f060022;
+        public static final int drawer_open=0x7f060021;
         public static final int hello_world=0x7f06001d;
         /**  Location client code resources (prefix with location_client) 
          */
@@ -443,11 +480,11 @@ containing a value of this type.
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f090000;
+        public static final int AppBaseTheme=0x7f0a0000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f090001;
+        public static final int AppTheme=0x7f0a0001;
     }
     public static final class styleable {
         /** Attributes that can be used with a AdsAttrs.

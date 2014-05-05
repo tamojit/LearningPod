@@ -2,6 +2,7 @@ package com.learningpod.android;
 
 import com.learningpod.android.activities.AccountSelectorActivity;
 import com.learningpod.android.activities.HomeScreenActivity;
+import com.learningpod.android.activities.HomeScreenActivityWithSlidingMenu;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -50,7 +51,7 @@ public class BaseActivity  extends Activity implements DialogInterface.OnClickLi
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		// TODO Auto-generated method stub
-		if(!((this instanceof AccountSelectorActivity) ||  (this instanceof HomeScreenActivity))){
+		if(!((this instanceof AccountSelectorActivity) ||  (this instanceof HomeScreenActivityWithSlidingMenu))){
 			if(item.getItemId()==R.id.homemenu){
 				Intent intent = new Intent(this,HomeScreenActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -4,46 +4,46 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#445766" >
-    
-    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" >
+    android:background="#0B243B" > 
+   
         
-     <LinearLayout android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:orientation="vertical">
- 
+   <LinearLayout android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="vertical">          
     
    <LinearLayout android:layout_width="match_parent"
-       android:layout_height="wrap_content" android:orientation="horizontal">
+       android:layout_height="wrap_content" android:orientation="horizontal" >
        
-       <LinearLayout android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:orientation="vertical">
-       
-	       <TextView
+     <ImageView 
+         android:layout_width="20dp"
+         android:layout_height="30dp"
+         android:background="@drawable/arrow"
+         android:layout_marginLeft="10dp"
+         android:layout_gravity="center_vertical"/>
+     
+     <TextView 
+         android:id="@+id/gotomap"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text = "MAP"
+         android:textColor="#ffffff"
+         android:textSize="24sp"
+         android:textStyle="bold"
+         android:layout_gravity="center_vertical"
+         android:layout_marginLeft="10dp"/>
+     
+     <TextView
 	        android:id = "@+id/podname"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:textColor="#ffffff"
-	        android:textSize="20sp"
+	        android:textSize="22sp"
 	        android:fontFamily="Museo300"
 	        android:layout_marginTop="10dp"
-	        android:layout_marginLeft="80dp"
-	        android:text = "Context Clues -  Level A "
+	        android:layout_marginBottom="10dp"
+	        android:layout_marginLeft="280dp"
+	        android:text = "Context Clues -  Level A"
 	         />
-	       
-	           
-	       <TextView
-	        android:id = "@+id/poddesc"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textColor="#ffffff"
-	        android:textSize="13sp"  
-	        android:layout_marginTop="0dp"      
-	        android:layout_marginLeft="80dp"
-	        android:text = "Determine the meaning of the unknown content"
-	         />
-       </LinearLayout>
 
        <LinearLayout
            android:id="@+id/questionprogresscontainer"
@@ -55,25 +55,19 @@
            android:layout_marginRight="35dp"
            >
 
-        <!--    <view
-               android:layout_width="20dp"
-               android:layout_marginLeft="15dp"
-               android:layout_height="20dp"
-               android:layout_gravity="center"
-               android:layout_marginTop="5dp"
-               android:background="@drawable/dotwhite" /> -->       
-
+           
           
        </LinearLayout>
        
    </LinearLayout> 
    
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" >
+    
+        
+        
    <LinearLayout android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:layout_marginLeft="35dp"
-       android:layout_marginRight="35dp"
-       android:layout_marginBottom="20dp"
-       android:background="#CEF6F5"
+       android:layout_height="match_parent"    
+       android:background="@drawable/bg"
        android:orientation="horizontal"
        android:weightSum="1"
        >
@@ -81,13 +75,11 @@
         <LinearLayout 
         android:layout_width="0dp"
         android:layout_weight="0.5"
-        android:layout_height="match_parent"        
-        android:layout_gravity= "center"
-                
-        android:orientation="vertical"
-        
+        android:layout_height="wrap_content"  
+        android:orientation="vertical"        
         android:layout_margin="5dp"
-        > <!--  android:background="#DF01D7" -->
+        
+        > 	
 
             <ImageView
                 android:id = "@+id/quesimage"
@@ -96,8 +88,18 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="30dp"
+                android:visibility="gone"
                 android:src="@drawable/refimg" 
+                android:adjustViewBounds="true"
+                 />
+            
+             <ImageView
+                android:id="@+id/alienforquestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"               
+                android:layout_marginRight="5dp"               
+                android:src="@drawable/alienwithlight" 
                 android:adjustViewBounds="true"
                  />
             
@@ -106,9 +108,11 @@
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:textColor="#000000"
-		        android:textSize="15sp"      
-		        android:layout_margin="5dp"
-		        android:background="#58FAF4"
+		        android:textSize="15sp" 
+		        android:layout_marginLeft="5dp"               
+                android:layout_marginRight="5dp"     
+		        android:layout_marginBottom="5dp"
+		        android:background="#F4FA58"
 		        android:padding="20dp"
 		        android:text = "Read the sentence. Use context clues to help you figure out the meaning of the word jovial. Then, choose the correct meaning of the word jovial"
         	 />
@@ -117,12 +121,22 @@
 		        android:id = "@+id/quesbody"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:textColor="#000000"
+		        android:textColor="#ffffff"
 		        android:textSize="15sp"      
 		        android:layout_margin="5dp"
 		        android:text = "Read the sentence. Use context clues to help you figure out the meaning of the word jovial. Then, choose the correct meaning of the word jovial"
         	 />
              
+             <ImageView
+                android:id="@+id/alienforexplanation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"               
+                android:layout_marginRight="5dp"     
+                android:layout_marginTop="10dp"          
+                android:src="@drawable/alienwithlight" 
+                android:adjustViewBounds="true"
+                 />
              <LinearLayout 
                  android:id = "@+id/explanationcontainer"
                  android:layout_height="fill_parent"
@@ -130,29 +144,31 @@
                  android:layout_marginLeft="5dp"
                  android:layout_marginRight="5dp"
                  android:layout_marginBottom="5dp"
-                 android:layout_marginTop="10dp"
+                 android:animateLayoutChanges="true"
                  android:orientation="vertical"
-                 android:background="#58FAF4">
+                 android:background="#F4FA58">
                  
                  <TextView 
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
-                     android:layout_marginLeft="80dp"
+                     android:layout_marginLeft="10dp"
                      android:layout_marginTop="10dp"
                      android:textSize="20sp"
-                     android:textColor="#08088A"
+                     android:textColor="#000000"
+                     android:textStyle="bold"
                      android:text = "Explanation"/>
                  
                   <TextView 
                      android:id ="@+id/explanationcontent"
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
-                     android:layout_marginLeft="80dp"
+                     android:layout_marginLeft="10dp"
                      android:layout_marginTop="10dp"
                      android:textSize="15sp"
                      android:textColor="#000000"
-                     android:text = "Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation Explanation"/>
-                 
+                     android:layout_marginBottom="10dp"
+                     android:text = "Explanation Explanation"/>
+                 	 
              </LinearLayout>
              
             
@@ -161,32 +177,43 @@
         <LinearLayout 
         android:layout_width="0dp"
         android:layout_weight="0.5"
-        android:layout_height="match_parent"        
-        android:layout_gravity= "center"                
+        android:layout_height="wrap_content"                               
         android:orientation="vertical"        
         android:layout_margin="5dp"
     
-        > <!-- android:background="#AEB404" -->
+        >            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+                
+                 <ImageView 
+                     android:id="@+id/choiceresulticon"
+                     android:layout_width="30dp"
+                     android:layout_height="30dp"                     
+                     android:layout_marginBottom="3dp"
+			       	 android:layout_marginTop="20dp"
+			       	 android:layout_marginLeft="15dp"
+			       	 android:visibility="gone" 
+                     />
+                 
+                 <TextView
+			        android:id = "@+id/choicelabel"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:textColor="#ffffff"
+			        android:textStyle="bold"
+			        android:textSize="20sp" 
+			        android:layout_marginLeft="15dp"
+			        android:layout_marginBottom="3dp"
+			        android:layout_marginTop="20dp"
+			        android:text = "CHOSE THE CORRECT ANSWER"
+         		/>
+                 
+            </LinearLayout>
             
+           
           
-            
-            <TextView
-		        android:id = "@+id/choicelabel"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:textColor="#000000"
-		        android:textSize="13sp" 
-		        android:layout_marginLeft="15dp"
-		        android:layout_marginBottom="3dp"
-		        android:layout_marginTop="20dp"
-		        android:text = "CHOSE THE CORRECT ANSWER"
-         	/>
-            <View
-			    android:layout_width="fill_parent"
-			    android:layout_height="1dp"		
-			    android:layout_marginLeft="15dp"
-			    android:background="#000000"
-		     />
             
             <LinearLayout
                 android:id="@+id/choicecontainer"
@@ -198,21 +225,25 @@
                 
             </LinearLayout>
             
-            <Button android:layout_width="150dp" 
+            <Button android:layout_width="180dp" 
                 android:id="@+id/btnsubmitnext"
                 android:layout_gravity="center"
-                android:layout_height="30dp"
-                android:textSize="15sp"
+                android:layout_height="40dp"
+                android:textSize="20sp"
                 android:text = "SUBMIT"
-                android:background="@drawable/custom_button_orange"
+                android:background="@drawable/custom_button_blue"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
                 android:layout_marginTop="20dp"
                 />
             
         </LinearLayout>
        
    </LinearLayout>
+  
+   </ScrollView>  
    </LinearLayout>
    
-	</ScrollView>    
+	  
 
 </LinearLayout>

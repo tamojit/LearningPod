@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.learningpod.android.activities.HomeScreenActivity;
+import com.learningpod.android.activities.HomeScreenActivityWithSlidingMenu;
 import com.learningpod.android.activities.PodQuestionActivity;
 import com.learningpod.android.beans.UserProfileBean;
 import com.learningpod.android.beans.explanations.ExplanationBean;

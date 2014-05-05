@@ -4,40 +4,38 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ChoiceFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.learningpod.android.BaseActivity;
-import com.learningpod.android.ContentCacheStore;
+import com.learningpod.android.ContentCacheStore; 
 import com.learningpod.android.R;
+import com.learningpod.android.R.layout;
 import com.learningpod.android.beans.UserProgressInfo;
 import com.learningpod.android.beans.explanations.ExplanationBean;
 import com.learningpod.android.beans.pods.PodBean;
 import com.learningpod.android.beans.questions.QuestionBean;
 import com.learningpod.android.beans.questions.QuestionChoiceBean;
-import com.learningpod.android.db.LearningpodDbHandler;
-import com.learningpod.android.parser.GenericParser;
-import com.learningpod.android.parser.ParserFactory;
-import com.learningpod.android.parser.ParserType;
-import com.learningpod.android.utility.LearningpodException;
+import com.learningpod.android.db.LearningpodDbHandler; 
 import com.learningpod.androind.listeners.ChoiceSelectListner;
 
-import android.app.Activity;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
+import android.content.Intent;
+import android.content.res.AssetManager; 
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
+import android.graphics.Typeface; 
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.TextureView;
+import android.view.LayoutInflater; 
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
+import android.view.View.OnClickListener; 
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener; 
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,18 +43,24 @@ import android.widget.TextView;
 
 public class PodQuestionActivity extends BaseActivity {
 
-	private List<QuestionBean> questions;
+	private ArrayList<QuestionBean> questions;
 	private ArrayList<ArrayList<ExplanationBean>> explanations;
 	private PodBean selectedPod;
 	private int currentQuestionIndex = 0;
-	private int[] greyButtonsIds = new int[]{R.drawable.graya,R.drawable.grayb,R.drawable.grayc, R.drawable.grayd};
-	private int[] blueButtonIds = new int[] {R.drawable.bluea,R.drawable.blueb,R.drawable.bluec,R.drawable.blued};
-	private int[] greenButtonIds = new int[] {R.drawable.greena,R.drawable.greenb, R.drawable.greenc, R.drawable.greend};
-	private int[] redButtonIds = new int[] {R.drawable.reda,R.drawable.redb, R.drawable.redc, R.drawable.redd};
-	private List<Button> selectChoiceButtons ;
+	private List<View> choiceViewList = new ArrayList<View>();
+	private List<View> progressDotList  = new ArrayList<View>();
+	private HashMap<Integer, Integer> quesToCorrectAnswerMap = new HashMap<Integer, Integer>();
+	//private int[] greyButtonsIds = new int[]{R.drawable.graya,R.drawable.grayb,R.drawable.grayc, R.drawable.grayd};
+	//private int[] blueButtonIds = new int[] {R.drawable.bluea,R.drawable.blueb,R.drawable.bluec,R.drawable.blued};
+	//private int[] greenButtonIds = new int[] {R.drawable.greena,R.drawable.greenb, R.drawable.greenc, R.drawable.greend};
+	//private int[] redButtonIds = new int[] {R.drawable.reda,R.drawable.redb, R.drawable.redc, R.drawable.redd};
+	private String[] choiceSeqArr = new String[]{"A.", "B.", "C.", "D."};
+	
 	private boolean isCurrentScreenForExplanation = false;
 	private int currentSelectedChoiceIndex = -1;
 	private boolean isCurrentSelectedChoiceCorrect = false;
+	private boolean isThisPodComplete = false;
+	 
 	
 	
 	
@@ -66,7 +70,7 @@ public class PodQuestionActivity extends BaseActivity {
 		setContentView(R.layout.questionlayout);		
 		Bundle extras = getIntent().getExtras();	
 		//get list of pods
-		questions  = (List<QuestionBean>)extras.getSerializable("questions");
+		questions  = (ArrayList<QuestionBean>)extras.getSerializable("questions");
 		// get the selected Pod
 		selectedPod = (PodBean)extras.getSerializable("selectedPod");
 		// get list of all explanations
@@ -74,18 +78,82 @@ public class PodQuestionActivity extends BaseActivity {
 		// set the pod details 
 		TextView podTitleView = (TextView)findViewById(R.id.podname);
 		podTitleView.setText(selectedPod.getTitle());
-		TextView podDescView = (TextView)findViewById(R.id.poddesc);
-		podDescView.setText(selectedPod.getDescription());	
+		
+		TextView goToMapView = (TextView)findViewById(R.id.gotomap);
+		goToMapView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(PodQuestionActivity.this,HomeScreenActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+				PodQuestionActivity.this.finish();
+			}
+		});
+		
 		// get the current question number for this pod and user id combination
 		LearningpodDbHandler dbHandler = new LearningpodDbHandler(this);
 		dbHandler.open();
-		currentQuestionIndex = dbHandler.getUserProgressStatus(ContentCacheStore.getContentCache().getLoggedInUserProfile().getId(), selectedPod.getPodId());
+		List<UserProgressInfo> userProgress = dbHandler.getUserProgressDetails(ContentCacheStore.getContentCache().getLoggedInUserProfile().getId(), selectedPod.getPodId());
+		currentQuestionIndex = userProgress.size();
 		dbHandler.close();
 		
+		// create the question progress bar
+		createProgressBar(userProgress);
 		
+		if(currentQuestionIndex==questions.size()){
+			// pod has been completed. go summary page			
+			isThisPodComplete = true;
+			//
+			 showSummaryScreen();
+			 return;
+		}
+		
+		
+	
+		// get the action bar
+		this.getActionBar().hide();		
 		// enable disable content based on screen state
 		enableScreenState();
+		// show the first question for this pod
 		showNextQuestion();
+	}
+	
+	private void createProgressBar(List<UserProgressInfo> userProgress){
+		// create the progress dots at the top of the screen
+		// show the progress status in the screen
+		// get the layout container for the progress dots
+		LinearLayout progressLayout = (LinearLayout)findViewById(R.id.questionprogresscontainer);
+		// clear the progress layout
+		progressLayout.removeAllViews();
+		//convert the desired dp value to pixel for creating layout parameters
+		int progressViewWidthInPx = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics());
+		LinearLayout.LayoutParams progressLayoutParams = new LinearLayout.LayoutParams(progressViewWidthInPx,progressViewWidthInPx);
+		//set the margins after necessary conversions from pixels to dp
+		progressLayoutParams.setMargins((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics())
+				, (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics())
+				, 0, 0);
+		progressLayoutParams.gravity = Gravity.CENTER;
+				
+		progressDotList.clear();
+		for(int idx=0;idx<questions.size();idx++){
+			View progressDot = new View(this);
+			progressDot.setLayoutParams(progressLayoutParams);
+			progressLayout.addView(progressDot);				
+			if(idx<currentQuestionIndex){
+				if(userProgress.get(idx).isChoiceCorrect()){
+					progressDot.setBackgroundResource(R.drawable.dotbluecorrect);
+				}else{
+					progressDot.setBackgroundResource(R.drawable.dotbluewrong);
+				}
+			}else if(idx==currentQuestionIndex){
+				progressDot.setBackgroundResource(R.drawable.dotblue);
+			}else{
+				progressDot.setBackgroundResource(R.drawable.dotwhite);
+			}
+			progressDotList.add(progressDot);
+		}
 	}
 	
 	private void enableScreenState(){
@@ -93,68 +161,84 @@ public class PodQuestionActivity extends BaseActivity {
 		Button btnSubmitNext = (Button)findViewById(R.id.btnsubmitnext);
 		LinearLayout explanationContainer = (LinearLayout)findViewById(R.id.explanationcontainer);
 		TextView explanationContentView = (TextView)findViewById(R.id.explanationcontent);
-		
+		TextView questionHighlightedView = (TextView)findViewById(R.id.quesbodyhighlighted);
 		if(isCurrentScreenForExplanation){
 			if(currentQuestionIndex==questions.size()-1){
 				// we have reached the last question in the pod
-				btnSubmitNext.setText("View Summary");
+				btnSubmitNext.setText("Summary");				
 			}else{
 				btnSubmitNext.setText("NEXT");
 			}
-			explanationContainer.setVisibility(View.VISIBLE);
-			// get all the explanations for this question
+			// change the background to the arrow image
+			btnSubmitNext.setBackgroundResource(R.drawable.next);
+			btnSubmitNext.getLayoutParams().height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, getResources().getDisplayMetrics());
+			btnSubmitNext.invalidate();
+			// disable the button till the animation is not over
+			btnSubmitNext.setEnabled(false);
+			
+			// call animation method. This will animate the movement of alien
+			animateAlienImageView();
+			
 			ArrayList<ExplanationBean> explanationsForThisQues = explanations.get(currentQuestionIndex);
 			// get the first explanation			
 			ExplanationBean explanation = explanationsForThisQues.get(0);
 			explanationContentView.setText(Html.fromHtml(explanation.getExplanation().getExplanationBody()));
-			// get the current selected choice button
-			Button selectedButton  = selectChoiceButtons.get(currentSelectedChoiceIndex);
+			ImageView resultIcon = (ImageView)findViewById(R.id.choiceresulticon);
+			
+			
 			// change the choice label if the selected choice is correct			
-			// Also change the image of the selection button
+			// Also show the correct/wrong icon in front of the text
 			if(isCurrentSelectedChoiceCorrect){
 				TextView choiceLabelText = (TextView)findViewById(R.id.choicelabel);						
-				choiceLabelText.setText("CORRECT!");
-				choiceLabelText.setTextColor(Color.parseColor("#38610B"));
+				choiceLabelText.setText("Yay! The Correct answer is " + choiceSeqArr[currentSelectedChoiceIndex]);
+				choiceLabelText.setTextColor(Color.parseColor("#74DF00"));
 				choiceLabelText.setTextSize(20);
 				choiceLabelText.setTypeface(Typeface.DEFAULT_BOLD);
-				// change the image of the selection button and the width of the button to 
-				// fit a bigger correct or wrong image
-				int buttonWidthInPx = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 55, getResources().getDisplayMetrics());
-				selectedButton.getLayoutParams().width = buttonWidthInPx;
-				selectedButton.getLayoutParams().height = buttonWidthInPx;								
-				selectedButton.setBackgroundResource(greenButtonIds[currentSelectedChoiceIndex]);
-				((LinearLayout.LayoutParams)selectedButton.getLayoutParams()).setMargins(0, 0, 0, 0);
-				selectedButton.invalidate();
+				// show the correct/wrong icon			
+				resultIcon.setVisibility(View.VISIBLE);
+				resultIcon.setBackgroundResource(R.drawable.tick);
+				// set the border image for the choice selected
+				choiceViewList.get(currentSelectedChoiceIndex).setBackgroundResource(R.drawable.choice_selected_correct);
+				// change the progress icon for this question
+				progressDotList.get(currentQuestionIndex).setBackgroundResource(R.drawable.dotbluecorrect);
 				
 			}else{
 				TextView choiceLabelText = (TextView)findViewById(R.id.choicelabel);						
-				choiceLabelText.setText("WRONG!");
-				choiceLabelText.setTextColor(Color.parseColor("#FE2E2E"));
+				choiceLabelText.setText("Oops! The Correct answer is " + choiceSeqArr[quesToCorrectAnswerMap.get(Integer.valueOf(currentQuestionIndex))]);
+				choiceLabelText.setTextColor(Color.parseColor("#e6855b"));
 				choiceLabelText.setTextSize(20);
 				choiceLabelText.setTypeface(Typeface.DEFAULT_BOLD);
-				// change the image of the selection button and the width of the button to 
-				// fit a bigger correct or wrong image
-				int buttonWidthInPx = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 55, getResources().getDisplayMetrics());
-				selectedButton.getLayoutParams().width = buttonWidthInPx;
-				selectedButton.getLayoutParams().height = buttonWidthInPx;
-				((LinearLayout.LayoutParams)selectedButton.getLayoutParams()).setMargins(0, 0, 0, 0);								
-				selectedButton.setBackgroundResource(redButtonIds[currentSelectedChoiceIndex]);
-				selectedButton.invalidate();
+				// show the correct/wrong icon			
+				resultIcon.setVisibility(View.VISIBLE);
+				resultIcon.setBackgroundResource(R.drawable.cross);
+				// set the border image for the choice selected
+				choiceViewList.get(currentSelectedChoiceIndex).setBackgroundResource(R.drawable.choice_selected_wrong);
+				// set the border image for the correct choice
+				choiceViewList.get(quesToCorrectAnswerMap.get(Integer.valueOf(currentQuestionIndex))).setBackgroundResource(R.drawable.choice_not_selected_correct);
+				// change the progress icon for this question
+				progressDotList.get(currentQuestionIndex).setBackgroundResource(R.drawable.dotbluewrong);
 			}
 		}
 		else{
 			// Disabled unless one option is selected
 			btnSubmitNext.setEnabled(false);
 			btnSubmitNext.setText("SUBMIT");
-			explanationContainer.setVisibility(View.INVISIBLE);		
-			
+			btnSubmitNext.setBackgroundResource(R.drawable.custom_button_blue);			
+			btnSubmitNext.getLayoutParams().height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
+			btnSubmitNext.invalidate();
+			explanationContainer.setVisibility(View.GONE);	
+			// show the alien for question
+			findViewById(R.id.alienforquestion).setVisibility(View.VISIBLE);
+			// change the color of the highlighted question
+			questionHighlightedView.setBackgroundColor(Color.parseColor("#F4FA58"));
 			// set the  choice label to its default state
 			TextView choiceLabelText = (TextView)findViewById(R.id.choicelabel);	
 			choiceLabelText.setText("CHOSE THE CORRECT ANSWER");
-			choiceLabelText.setTextColor(Color.parseColor("#000000"));
+			choiceLabelText.setTextColor(Color.parseColor("#ffffff"));
 			choiceLabelText.setTextSize(13);
 			choiceLabelText.setTypeface(Typeface.DEFAULT);
-			
+			ImageView resultIcon = (ImageView)findViewById(R.id.choiceresulticon);
+			resultIcon.setVisibility(View.GONE);
 		}
 		
 		btnSubmitNext.setOnClickListener(new OnClickListener() {
@@ -165,11 +249,20 @@ public class PodQuestionActivity extends BaseActivity {
 					// clicking the Next button in explanation screen
 					if(currentQuestionIndex==questions.size()-1){ 						
 						// we have reached the last question in the pod
-						 showAlertDialog("Learningpod Error", "Summary screen under development");
+						 //showAlertDialog("Learningpod Error", "Summary screen under development");
+						 Intent intent  = new Intent(PodQuestionActivity.this,SummaryActivity.class);
+						 intent.putExtra("selectedPod", selectedPod);						 
+						 PodQuestionActivity.this.startActivity(intent);
+						 PodQuestionActivity.this.finish();
+						 isThisPodComplete = true;
+						 showSummaryScreen();
 					}else{						
 						// increment the question number index				
 						currentQuestionIndex++;
 						isCurrentScreenForExplanation =false;
+						// if the pod has been completed and user clicked this button
+						// after coming here from summary screen.
+						if(isThisPodComplete){ isCurrentScreenForExplanation=true;}
 						enableScreenState();
 						showNextQuestion();
 					}
@@ -209,30 +302,9 @@ public class PodQuestionActivity extends BaseActivity {
 	
 	private void showNextQuestion(){
 		
-		// show the progress status in the screen
-		// get the layout container for the progress dots
-		LinearLayout progressLayout = (LinearLayout)findViewById(R.id.questionprogresscontainer);
-		// clear the progress layout
-		progressLayout.removeAllViews();
-		//convert the desired dp value to pixel for creating layout parameters
-		int progressViewWidthInPx = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics());
-		LinearLayout.LayoutParams progressLayoutParams = new LinearLayout.LayoutParams(progressViewWidthInPx,progressViewWidthInPx);
-		//set the margins after necessary conversions from pixels to dp
-		progressLayoutParams.setMargins((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics())
-				, (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics())
-				, 0, 0);
-		progressLayoutParams.gravity = Gravity.CENTER;
-		for(int idx=0;idx<questions.size();idx++){
-			View progressDot = new View(this);
-			progressDot.setLayoutParams(progressLayoutParams);
-			progressLayout.addView(progressDot);				
-			if(idx<=currentQuestionIndex){
-				progressDot.setBackgroundResource(R.drawable.dotblue);
-			}else{
-				progressDot.setBackgroundResource(R.drawable.dotwhite);
-			}
-		}
 		
+		// set the progress bar dot to blue
+		progressDotList.get(currentQuestionIndex).setBackgroundResource(R.drawable.dotblue);
 		
 		// get the next question bean
 		QuestionBean nextQuestion = questions.get(currentQuestionIndex);		
@@ -262,6 +334,8 @@ public class PodQuestionActivity extends BaseActivity {
 			questionImage.getLayoutParams().height=0;
 			questionBodyHighlightedView.getLayoutParams().height=LayoutParams.WRAP_CONTENT;
 		}
+		// get the alien image for explanation
+		findViewById(R.id.alienforexplanation).setVisibility(View.INVISIBLE);
 		
 		// get Inflater instance
 		LayoutInflater inflater = getLayoutInflater();
@@ -269,56 +343,170 @@ public class PodQuestionActivity extends BaseActivity {
 		LinearLayout choiceContainer = (LinearLayout)findViewById(R.id.choicecontainer);
 		// clear the previous choices
 		choiceContainer.removeAllViews();
+		choiceViewList.clear();
 		// show choices
 		List<QuestionChoiceBean> choicesForThisQuestion = nextQuestion.getChoiceQuestion().getChoiceInteraction();
 		// create a list of all select choice buttons for changing drawable later
-	    selectChoiceButtons = new ArrayList<Button>();
+	   
 		for(int idx=0;idx<choicesForThisQuestion.size();idx++){
 			//get the choice bean object
 			QuestionChoiceBean choice = choicesForThisQuestion.get(idx);
 			// inflate the choice view layout
-			View choiceView = inflater.inflate(R.layout.choice_view, null);			
+			View choiceView = inflater.inflate(R.layout.choice_view, null);	
+			choiceView.setBackgroundColor(Color.parseColor("#0dffffff"));
 			//set the button image and choice text
 			((TextView)choiceView.findViewById(R.id.choicebody)).setText(Html.fromHtml(choice.getChoiceBody()));
-			Button btnSelectChoice = (Button)choiceView.findViewById(R.id.btnselectchoice);
-			btnSelectChoice.setBackgroundResource(greyButtonsIds[idx]);
-			selectChoiceButtons.add(btnSelectChoice);
+			((TextView)choiceView.findViewById(R.id.choicesequence)).setText(choiceSeqArr[idx]);
+			
 			// set the on click listener
 			choiceView.setOnClickListener(new ChoiceSelectListner(this,false));	
-			btnSelectChoice.setOnClickListener(new ChoiceSelectListner(this, true));
+			choiceView.setId(idx);
 			// set the id as 1 if this is the correct choice
 			if(choice.getCorrect().equalsIgnoreCase("true")){				
-				choiceView.setTag(1);
-				btnSelectChoice.setTag(1);
+				choiceView.setTag(1);	
+				quesToCorrectAnswerMap.put(currentQuestionIndex, idx);
 			}
 			// set the id as 0 if this is the wrong choice
 			else{
-				choiceView.setTag(0);
-				btnSelectChoice.setTag(0);
+				choiceView.setTag(0);				
 			}
 			// add the choice to the choice container
 			choiceContainer.addView(choiceView);
+			choiceViewList.add(choiceView);
 		}
 		
 		
 	}	
 	
-	
-	public int[] getGreytButtonIds(){
-		return greyButtonsIds;
+	private void showSummaryScreen(){
+		setContentView(R.layout.summarylayout);
+		TextView goToMapView = (TextView)findViewById(R.id.gotomap);
+		goToMapView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(PodQuestionActivity.this,HomeScreenActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+				PodQuestionActivity.this.finish();
+			}
+		});
+		LearningpodDbHandler dbHandler = new LearningpodDbHandler(this);
+		dbHandler.open();
+		final List<UserProgressInfo> userProgress = dbHandler.getUserProgressDetails(ContentCacheStore.getContentCache().getLoggedInUserProfile().getId(), selectedPod.getPodId());
+		//currentQuestionIndex = userProgress.size();
+		dbHandler.close();
+		
+	 	
+		
+		int totalQuestions = userProgress.size();
+		int correctAnswers = 0;
+		LinearLayout summaryQuesContainer = (LinearLayout)findViewById(R.id.summaryquestioncontainer);
+		((TextView)findViewById(R.id.summarypodname)).setText("Summary of "+ selectedPod.getTitle());
+		LayoutInflater inflater = getLayoutInflater();
+		for(int idx=0;idx<userProgress.size();idx++){
+			UserProgressInfo progress = userProgress.get(idx);
+			View view = inflater.inflate(R.layout.summary_question_view, null);
+			TextView quesSeq = (TextView)view.findViewById(R.id.summaryquestionsequence);
+			quesSeq.setText(Integer.valueOf(idx+1).toString() + ". ");
+			
+			ImageView quesImage = (ImageView)view.findViewById(R.id.summaryQuestionicon);
+			if(progress.isChoiceCorrect()){
+				quesImage.setBackgroundResource(R.drawable.tick);
+				correctAnswers++;
+			}
+			else{
+				quesImage.setBackgroundResource(R.drawable.cross);
+			}
+			view.setId(idx);
+			view.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					/*currentQuestionIndex = v.getId();
+					isCurrentSelectedChoiceCorrect =  userProgress.get(currentQuestionIndex).isChoiceCorrect();
+				 	List<QuestionChoiceBean> choices =  questions.get(currentQuestionIndex).getChoiceQuestion().getChoiceInteraction();
+				 	for(int idx = 0;idx<choices.size();idx++){
+				 		if(choices.get(idx).getChoiceId()==userProgress.get(currentQuestionIndex).getChoiceId()){
+				 			currentSelectedChoiceIndex = idx;
+				 			break;
+				 		}
+				 	}
+					isCurrentScreenForExplanation = true;
+					setContentView(R.layout.questionlayout);
+					
+					showNextQuestion();
+					enableScreenState();*/
+				}
+			});
+			summaryQuesContainer.addView(view);
+		}
+		
+		int percentage = (int)((correctAnswers*100/totalQuestions));
+		((TextView)findViewById(R.id.correctpercentage)).setText( percentage + "%");
+		
+	}
+	private void animateAlienImageView(){
+		final ImageView alienForQues = (ImageView)findViewById(R.id.alienforquestion);
+		final ImageView alienForExp = (ImageView)findViewById(R.id.alienforexplanation);
+		int[] origLocation = new int[2];
+		int[] destLocation = new int[2];
+		
+		alienForQues.getLocationOnScreen(origLocation);
+		alienForExp.getLocationOnScreen(destLocation);
+		TranslateAnimation animation = new TranslateAnimation(0,0,0,destLocation[1]-origLocation[1]);
+		animation.setDuration(1000);
+		animation.setFillAfter(false);
+		
+		animation.setAnimationListener(new AnimationListener(){
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+				alienForQues.clearAnimation();
+				alienForQues.setVisibility(View.INVISIBLE);
+				alienForExp.setVisibility(View.VISIBLE );
+				// show the explanation container and the alien image
+				LinearLayout explanationContainer = (LinearLayout)findViewById(R.id.explanationcontainer);
+			 
+				// code to animate explanation visibility using animate layout changes
+				LayoutParams dummyParams = new  LayoutParams( LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);			
+				View dummyView = new View(PodQuestionActivity.this);				 
+				dummyView.setLayoutParams(dummyParams);
+				dummyView.setVisibility(View.INVISIBLE);
+				explanationContainer.addView(dummyView);	
+				
+				
+				// make the explanation container visible 
+				explanationContainer.setVisibility(View.VISIBLE);
+				
+				// enable the next/summary button
+				((Button)findViewById(R.id.btnsubmitnext)).setEnabled(true);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+				// change the colour of highlighted question				
+				TextView questionHighlightedView = (TextView)findViewById(R.id.quesbodyhighlighted);
+				questionHighlightedView.setBackgroundColor(Color.parseColor("#8896a3"));
+				
+			}
+			
+		});
+		//alienForQues.bringToFront();
+		alienForQues.startAnimation(animation);
+		
 	}
 	
-	public int[] getBlueButtonIds(){
-		return blueButtonIds;
-	}
-	
-	public int[] getGreenButtonIds(){
-		return greenButtonIds;
-	}
-	
-	public List<Button> getSelectChoiceButtons(){
-		return selectChoiceButtons; 
-	}
 	
 	public void setCurrentSelectedChoiceCorrect(boolean currentSelectedChoiceCorrect){
 		this.isCurrentSelectedChoiceCorrect = currentSelectedChoiceCorrect;
@@ -340,6 +528,21 @@ public class PodQuestionActivity extends BaseActivity {
 		return isCurrentScreenForExplanation;
 	}
 	
+	public List<View> getChoiceViews(){
+		return choiceViewList;
+	}
+	
+	public HashMap<Integer,Integer> getQuesToCorrectChoiceMap(){
+		return quesToCorrectAnswerMap;
+	}
+	
+	public int getCurrentQuestionIndex(){
+		return currentQuestionIndex;
+	}
+	
+	
+	
+
 }
 
 

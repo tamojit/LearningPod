@@ -123,7 +123,7 @@ public class GooglePlusSignInActivity extends Activity
 					Person currentPerson = Plus.PeopleApi
 							.getCurrentPerson(mGoogleApiClient);
 					String personName = currentPerson.getDisplayName();
-					Intent intent = new Intent(this,HomeScreenActivity.class);
+					Intent intent = new Intent(this,HomeScreenActivityWithSlidingMenu.class);
 					intent.putExtra("username", personName);
 					startActivity(intent);				
 				}

@@ -1,11 +1,16 @@
 <learningpod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:m="http://www.w3.org/1998/Math/MathML" title="Kaplan Kids (Reading): [IMAGE] Based on its role in this sentence, what can you tell about the word admiral ? " data-uuid="fe1f8d59-015d-4028-b6c0-036e6302491c" xsi:schemaLocation="http://www.learningpod.com/xsd/item/1.0 learningpod-item.xsd">
 <choiceQuestion>
 <questionBody>
-<p></p>
 <p>
-<img data-uuid="088acd23-79ae-4aaa-988d-9dddbcc40c6f"/>
+<b>
+The 
+<u>admiral</u>
+joined the Navy 30 years ago.
+</b>
 </p>
-<p></p>
+<p>
+<br/>
+</p>
 <p>
 Based on its role in this sentence, what can you tell about the word
 <i>admiral</i>

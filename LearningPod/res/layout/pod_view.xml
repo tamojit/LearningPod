@@ -45,12 +45,25 @@
       <TextView
         android:id = "@+id/poddesc"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="100dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"        
         android:text="Pod Description"
         android:textSize="15sp"
+        android:textColor="#253646"
+         />
+      
+      <TextView
+        android:id = "@+id/podprogressstatus"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"        
+        android:text="Pod Completion Status"
+        android:textSize="15sp"
+        android:textStyle="bold"
         android:textColor="#253646"
          />
     

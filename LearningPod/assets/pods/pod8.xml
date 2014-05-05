@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" podId="a09f89dc-d43f-4e4a-826b-1b23e41eb6b8" xsi:noNamespaceSchemaLocation="learningpod-pod.xsd">
+<pod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" podId="8a09f89dc-d43f-4e4a-826b-1b23e41eb6b8" xsi:noNamespaceSchemaLocation="learningpod-pod.xsd">
   <title>Example Pod</title>
   <description>This this is an example pod for documention purposes.</description>
   <scorable>true</scorable>

@@ -45,7 +45,7 @@ public class LearningpodDbHandler {
 		values.put("UserId", progressInfo.getUserId());
 		values.put("PodId", progressInfo.getPodId());
 		values.put("QuestionId",progressInfo.getQuestionId());
-		values.put("ChoiceId",progressInfo.getQuestionId());
+		values.put("ChoiceId",progressInfo.getChoiceId());
 		if(progressInfo.isChoiceCorrect()){
 			values.put("ChoiceStatus",1);
 		}

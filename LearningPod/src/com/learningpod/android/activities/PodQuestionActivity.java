@@ -50,24 +50,21 @@ public class PodQuestionActivity extends BaseActivity {
 	private List<View> choiceViewList = new ArrayList<View>();
 	private List<View> progressDotList  = new ArrayList<View>();
 	private HashMap<Integer, Integer> quesToCorrectAnswerMap = new HashMap<Integer, Integer>();
-	//private int[] greyButtonsIds = new int[]{R.drawable.graya,R.drawable.grayb,R.drawable.grayc, R.drawable.grayd};
-	//private int[] blueButtonIds = new int[] {R.drawable.bluea,R.drawable.blueb,R.drawable.bluec,R.drawable.blued};
-	//private int[] greenButtonIds = new int[] {R.drawable.greena,R.drawable.greenb, R.drawable.greenc, R.drawable.greend};
-	//private int[] redButtonIds = new int[] {R.drawable.reda,R.drawable.redb, R.drawable.redc, R.drawable.redd};
-	private String[] choiceSeqArr = new String[]{"A.", "B.", "C.", "D."};
-	
+	private String[] choiceSeqArr = new String[]{"A.", "B.", "C.", "D."};	
 	private boolean isCurrentScreenForExplanation = false;
 	private int currentSelectedChoiceIndex = -1;
 	private boolean isCurrentSelectedChoiceCorrect = false;
 	private boolean isThisPodComplete = false;
-	 
+	// this will hold the user progress once user has completed the pod
+	private List<UserProgressInfo> userProgressCompleted = null; 
+	
 	
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.questionlayout);		
+		setContentView(R.layout.podquestionrelativeview);		
 		Bundle extras = getIntent().getExtras();	
 		//get list of pods
 		questions  = (ArrayList<QuestionBean>)extras.getSerializable("questions");
@@ -95,17 +92,20 @@ public class PodQuestionActivity extends BaseActivity {
 		// get the current question number for this pod and user id combination
 		LearningpodDbHandler dbHandler = new LearningpodDbHandler(this);
 		dbHandler.open();
-		List<UserProgressInfo> userProgress = dbHandler.getUserProgressDetails(ContentCacheStore.getContentCache().getLoggedInUserProfile().getId(), selectedPod.getPodId());
-		currentQuestionIndex = userProgress.size();
+		List<UserProgressInfo> userProgressTemp = dbHandler.getUserProgressDetails(ContentCacheStore.getContentCache().getLoggedInUserProfile().getId(), selectedPod.getPodId());
+		currentQuestionIndex = userProgressTemp.size();
 		dbHandler.close();
 		
 		// create the question progress bar
-		createProgressBar(userProgress);
+		createProgressBar(userProgressTemp);
+		
 		
 		if(currentQuestionIndex==questions.size()){
 			// pod has been completed. go summary page			
 			isThisPodComplete = true;
-			//
+			// as the pod is complete the user progress value is not going to change
+			userProgressCompleted = userProgressTemp;
+			//go to the summary screen
 			 showSummaryScreen();
 			 return;
 		}
@@ -113,11 +113,12 @@ public class PodQuestionActivity extends BaseActivity {
 		
 	
 		// get the action bar
-		this.getActionBar().hide();		
-		// enable disable content based on screen state
-		enableScreenState();
+		this.getActionBar().hide();	
 		// show the first question for this pod
 		showNextQuestion();
+		// enable disable content based on screen state
+		enableScreenState();
+		
 	}
 	
 	private void createProgressBar(List<UserProgressInfo> userProgress){
@@ -140,17 +141,29 @@ public class PodQuestionActivity extends BaseActivity {
 		for(int idx=0;idx<questions.size();idx++){
 			View progressDot = new View(this);
 			progressDot.setLayoutParams(progressLayoutParams);
-			progressLayout.addView(progressDot);				
-			if(idx<currentQuestionIndex){
+			progressLayout.addView(progressDot);
+			// when progress bar is created for in complete pod
+			if(!isThisPodComplete){
+				// show the correct and wrong answers only for the completed questions
+				if(idx<currentQuestionIndex){
+					if(userProgress.get(idx).isChoiceCorrect()){
+						progressDot.setBackgroundResource(R.drawable.dotbluecorrect);
+					}else{
+						progressDot.setBackgroundResource(R.drawable.dotbluewrong);
+					}
+				}else if(idx==currentQuestionIndex){				
+					progressDot.setBackgroundResource(R.drawable.dotblue);
+				}else{
+					progressDot.setBackgroundResource(R.drawable.dotwhite);
+				}
+			}
+			// when progress bar is created for complete pod
+			else{
 				if(userProgress.get(idx).isChoiceCorrect()){
 					progressDot.setBackgroundResource(R.drawable.dotbluecorrect);
 				}else{
 					progressDot.setBackgroundResource(R.drawable.dotbluewrong);
 				}
-			}else if(idx==currentQuestionIndex){
-				progressDot.setBackgroundResource(R.drawable.dotblue);
-			}else{
-				progressDot.setBackgroundResource(R.drawable.dotwhite);
 			}
 			progressDotList.add(progressDot);
 		}
@@ -173,11 +186,19 @@ public class PodQuestionActivity extends BaseActivity {
 			btnSubmitNext.setBackgroundResource(R.drawable.next);
 			btnSubmitNext.getLayoutParams().height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, getResources().getDisplayMetrics());
 			btnSubmitNext.invalidate();
-			// disable the button till the animation is not over
-			btnSubmitNext.setEnabled(false);
-			
+			// disable the button till the animation is not over. don't disable if the pod is complete and there will be no animation			
+			// do the animation only when pod is not complete
+			if(!isThisPodComplete){
+				btnSubmitNext.setEnabled(false);
 			// call animation method. This will animate the movement of alien
-			animateAlienImageView();
+				animateAlienImageView();
+			}else{
+				// change the colour of highlighted question
+				questionHighlightedView.setBackgroundColor(Color.parseColor("#8896a3"));
+				((ImageView)findViewById(R.id.alienforquestion)).setVisibility(View.INVISIBLE);
+				((ImageView)findViewById(R.id.alienforexplanation)).setVisibility(View.VISIBLE);				
+				explanationContainer.setVisibility(View.VISIBLE);
+			}
 			
 			ArrayList<ExplanationBean> explanationsForThisQues = explanations.get(currentQuestionIndex);
 			// get the first explanation			
@@ -243,28 +264,58 @@ public class PodQuestionActivity extends BaseActivity {
 		
 		btnSubmitNext.setOnClickListener(new OnClickListener() {
 			
+			
+
 			@Override
 			public void onClick(View v) {
 				if(isCurrentScreenForExplanation){
+					
+					//get the number of questions completed
+					// get the current question number for this pod and user id combination
+					LearningpodDbHandler dbHandler = new LearningpodDbHandler(PodQuestionActivity.this);
+					dbHandler.open();
+					List<UserProgressInfo> userProgressTemp = dbHandler.getUserProgressDetails(ContentCacheStore.getContentCache().getLoggedInUserProfile().getId(), selectedPod.getPodId());
+					int currentQuestionToBeAttempted = userProgressTemp.size();
+					dbHandler.close();
+					
 					// clicking the Next button in explanation screen
 					if(currentQuestionIndex==questions.size()-1){ 						
-						// we have reached the last question in the pod
-						 //showAlertDialog("Learningpod Error", "Summary screen under development");
-						 Intent intent  = new Intent(PodQuestionActivity.this,SummaryActivity.class);
-						 intent.putExtra("selectedPod", selectedPod);						 
-						 PodQuestionActivity.this.startActivity(intent);
-						 PodQuestionActivity.this.finish();
+						// we have reached the last question in the pod						 
 						 isThisPodComplete = true;
 						 showSummaryScreen();
-					}else{						
+					}					
+					else{						
 						// increment the question number index				
 						currentQuestionIndex++;
 						isCurrentScreenForExplanation =false;
 						// if the pod has been completed and user clicked this button
 						// after coming here from summary screen.
-						if(isThisPodComplete){ isCurrentScreenForExplanation=true;}
-						enableScreenState();
+						if(isThisPodComplete){ 
+							isCurrentScreenForExplanation=true;
+							isCurrentSelectedChoiceCorrect =  userProgressCompleted.get(currentQuestionIndex).isChoiceCorrect();
+						 	List<QuestionChoiceBean> choices =  questions.get(currentQuestionIndex).getChoiceQuestion().getChoiceInteraction();
+						 	for(int idx = 0;idx<choices.size();idx++){						 		
+						 		if(choices.get(idx).getChoiceId().equalsIgnoreCase(userProgressCompleted.get(currentQuestionIndex).getChoiceId())){
+						 			currentSelectedChoiceIndex = idx;
+						 			break;
+						 		}
+						 	}
+							
+						}
+						if(currentQuestionIndex<currentQuestionToBeAttempted){
+							isCurrentScreenForExplanation = true;
+							isCurrentSelectedChoiceCorrect =  userProgressTemp.get(currentQuestionIndex).isChoiceCorrect();
+						 	List<QuestionChoiceBean> choices =  questions.get(currentQuestionIndex).getChoiceQuestion().getChoiceInteraction();
+						 	for(int idx = 0;idx<choices.size();idx++){						 		
+						 		if(choices.get(idx).getChoiceId().equalsIgnoreCase(userProgressTemp.get(currentQuestionIndex).getChoiceId())){
+						 			currentSelectedChoiceIndex = idx;
+						 			break;
+						 		}
+						 	}
+						}
 						showNextQuestion();
+						enableScreenState();
+						
 					}
 				}else{
 					// clicking the submit button in Question screen
@@ -291,7 +342,7 @@ public class PodQuestionActivity extends BaseActivity {
 		userProgress.setUserId(userId);
 		userProgress.setPodId(podId);
 		userProgress.setQuestionId(questionItemId);
-		userProgress.setChoiceId(choiceId);
+		userProgress.setChoiceId(choiceId);		
 		userProgress.setChoiceCorrect(isCurrentSelectedChoiceCorrect);
 		// create a db handler and open the connection
 		LearningpodDbHandler handler = new LearningpodDbHandler(this);
@@ -375,6 +426,37 @@ public class PodQuestionActivity extends BaseActivity {
 			choiceViewList.add(choiceView);
 		}
 		
+		// get the previous question button
+		Button btnBack = (Button)findViewById(R.id.btnPrevious);
+		if(currentQuestionIndex==0){
+			btnBack.setVisibility(View.INVISIBLE);
+		}else{
+			btnBack.setVisibility(View.VISIBLE);
+		}
+		btnBack.setOnClickListener(new OnClickListener() {
+		
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				currentQuestionIndex--;
+				isCurrentScreenForExplanation=true;
+				LearningpodDbHandler dbHandler = new LearningpodDbHandler(PodQuestionActivity.this);
+				dbHandler.open();
+				List<UserProgressInfo> userProgressTemp = dbHandler.getUserProgressDetails(ContentCacheStore.getContentCache().getLoggedInUserProfile().getId(), selectedPod.getPodId());
+				dbHandler.close();
+				isCurrentSelectedChoiceCorrect =  userProgressTemp.get(currentQuestionIndex).isChoiceCorrect();
+			 	List<QuestionChoiceBean> choices =  questions.get(currentQuestionIndex).getChoiceQuestion().getChoiceInteraction();
+			 	for(int idx = 0;idx<choices.size();idx++){						 		
+			 		if(choices.get(idx).getChoiceId().equalsIgnoreCase(userProgressTemp.get(currentQuestionIndex).getChoiceId())){
+			 			currentSelectedChoiceIndex = idx;
+			 			break;
+			 		}
+			 	}	
+				showNextQuestion();
+				enableScreenState();
+				
+			}
+		});
 		
 	}	
 	
@@ -392,21 +474,22 @@ public class PodQuestionActivity extends BaseActivity {
 				PodQuestionActivity.this.finish();
 			}
 		});
+		// as the user has completed this pod, store the user progress in completed object
 		LearningpodDbHandler dbHandler = new LearningpodDbHandler(this);
 		dbHandler.open();
-		final List<UserProgressInfo> userProgress = dbHandler.getUserProgressDetails(ContentCacheStore.getContentCache().getLoggedInUserProfile().getId(), selectedPod.getPodId());
+		userProgressCompleted = dbHandler.getUserProgressDetails(ContentCacheStore.getContentCache().getLoggedInUserProfile().getId(), selectedPod.getPodId());
 		//currentQuestionIndex = userProgress.size();
 		dbHandler.close();
 		
 	 	
 		
-		int totalQuestions = userProgress.size();
+		int totalQuestions = userProgressCompleted.size();
 		int correctAnswers = 0;
 		LinearLayout summaryQuesContainer = (LinearLayout)findViewById(R.id.summaryquestioncontainer);
 		((TextView)findViewById(R.id.summarypodname)).setText("Summary of "+ selectedPod.getTitle());
 		LayoutInflater inflater = getLayoutInflater();
-		for(int idx=0;idx<userProgress.size();idx++){
-			UserProgressInfo progress = userProgress.get(idx);
+		for(int idx=0;idx<userProgressCompleted.size();idx++){
+			UserProgressInfo progress = userProgressCompleted.get(idx);
 			View view = inflater.inflate(R.layout.summary_question_view, null);
 			TextView quesSeq = (TextView)view.findViewById(R.id.summaryquestionsequence);
 			quesSeq.setText(Integer.valueOf(idx+1).toString() + ". ");
@@ -425,20 +508,23 @@ public class PodQuestionActivity extends BaseActivity {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					/*currentQuestionIndex = v.getId();
-					isCurrentSelectedChoiceCorrect =  userProgress.get(currentQuestionIndex).isChoiceCorrect();
+					currentQuestionIndex = v.getId();
+					isCurrentSelectedChoiceCorrect =  userProgressCompleted.get(currentQuestionIndex).isChoiceCorrect();
 				 	List<QuestionChoiceBean> choices =  questions.get(currentQuestionIndex).getChoiceQuestion().getChoiceInteraction();
 				 	for(int idx = 0;idx<choices.size();idx++){
-				 		if(choices.get(idx).getChoiceId()==userProgress.get(currentQuestionIndex).getChoiceId()){
+				 		
+				 		if(choices.get(idx).getChoiceId().equalsIgnoreCase(userProgressCompleted.get(currentQuestionIndex).getChoiceId())){
 				 			currentSelectedChoiceIndex = idx;
 				 			break;
 				 		}
 				 	}
 					isCurrentScreenForExplanation = true;
-					setContentView(R.layout.questionlayout);
+					setContentView(R.layout.podquestionrelativeview);
 					
+					createProgressBar(userProgressCompleted);
 					showNextQuestion();
-					enableScreenState();*/
+					enableScreenState();
+					
 				}
 			});
 			summaryQuesContainer.addView(view);
@@ -455,11 +541,14 @@ public class PodQuestionActivity extends BaseActivity {
 		int[] destLocation = new int[2];
 		
 		alienForQues.getLocationOnScreen(origLocation);
+		alienForQues.bringToFront();
+		alienForQues.requestLayout();
+		alienForQues.invalidate();
 		alienForExp.getLocationOnScreen(destLocation);
 		TranslateAnimation animation = new TranslateAnimation(0,0,0,destLocation[1]-origLocation[1]);
 		animation.setDuration(1000);
 		animation.setFillAfter(false);
-		
+		//animation.setZAdjustment(Animation.ZORDER_TOP);
 		animation.setAnimationListener(new AnimationListener(){
 
 			@Override
@@ -478,7 +567,7 @@ public class PodQuestionActivity extends BaseActivity {
 				dummyView.setVisibility(View.INVISIBLE);
 				explanationContainer.addView(dummyView);	
 				
-				
+			
 				// make the explanation container visible 
 				explanationContainer.setVisibility(View.VISIBLE);
 				

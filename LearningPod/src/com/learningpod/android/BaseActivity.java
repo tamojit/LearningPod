@@ -3,6 +3,7 @@ package com.learningpod.android;
 import com.learningpod.android.activities.AccountSelectorActivity;
 import com.learningpod.android.activities.HomeScreenActivity;
 import com.learningpod.android.activities.HomeScreenActivityWithSlidingMenu;
+import com.learningpod.android.utility.CustomProgressDialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;

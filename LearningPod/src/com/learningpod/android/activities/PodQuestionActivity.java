@@ -57,6 +57,7 @@ public class PodQuestionActivity extends BaseActivity {
 	private boolean isThisPodComplete = false;
 	// this will hold the user progress once user has completed the pod
 	private List<UserProgressInfo> userProgressCompleted = null; 
+	private boolean isBackButtonPressed = false;
 	
 	
 	
@@ -111,7 +112,7 @@ public class PodQuestionActivity extends BaseActivity {
 		}
 		
 		
-	
+		
 		// get the action bar
 		this.getActionBar().hide();	
 		// show the first question for this pod
@@ -175,6 +176,35 @@ public class PodQuestionActivity extends BaseActivity {
 		LinearLayout explanationContainer = (LinearLayout)findViewById(R.id.explanationcontainer);
 		TextView explanationContentView = (TextView)findViewById(R.id.explanationcontent);
 		TextView questionHighlightedView = (TextView)findViewById(R.id.quesbodyhighlighted);
+		
+		// get the previous (Back) question button. clicking on the back button will take the user to the previous question in the explanation screen
+		Button btnBack = (Button)findViewById(R.id.btnPrevious);			 
+		btnBack.setOnClickListener(new OnClickListener() {
+		
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				isBackButtonPressed = true;
+				currentQuestionIndex--;
+				isCurrentScreenForExplanation=true;
+				LearningpodDbHandler dbHandler = new LearningpodDbHandler(PodQuestionActivity.this);
+				dbHandler.open();
+				List<UserProgressInfo> userProgressTemp = dbHandler.getUserProgressDetails(ContentCacheStore.getContentCache().getLoggedInUserProfile().getId(), selectedPod.getPodId());
+				dbHandler.close();
+				isCurrentSelectedChoiceCorrect =  userProgressTemp.get(currentQuestionIndex).isChoiceCorrect();
+			 	List<QuestionChoiceBean> choices =  questions.get(currentQuestionIndex).getChoiceQuestion().getChoiceInteraction();
+			 	for(int idx = 0;idx<choices.size();idx++){						 		
+			 		if(choices.get(idx).getChoiceId().equalsIgnoreCase(userProgressTemp.get(currentQuestionIndex).getChoiceId())){
+			 			currentSelectedChoiceIndex = idx;
+			 			break;
+			 		}
+			 	}	
+				showNextQuestion();
+				enableScreenState();				
+			}
+		});
+					
+					
 		if(isCurrentScreenForExplanation){
 			if(currentQuestionIndex==questions.size()-1){
 				// we have reached the last question in the pod
@@ -182,17 +212,26 @@ public class PodQuestionActivity extends BaseActivity {
 			}else{
 				btnSubmitNext.setText("NEXT");
 			}
+			//enable the back button if this is not the first question
+			if(currentQuestionIndex!=0) 
+				btnBack.setVisibility(View.VISIBLE);
+			else
+				btnBack.setVisibility(View.INVISIBLE);
 			// change the background to the arrow image
 			btnSubmitNext.setBackgroundResource(R.drawable.next);
-			btnSubmitNext.getLayoutParams().height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, getResources().getDisplayMetrics());
+			btnSubmitNext.getLayoutParams().height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75, getResources().getDisplayMetrics());
+			btnSubmitNext.getLayoutParams().width = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
+			((LinearLayout.LayoutParams)btnSubmitNext.getLayoutParams()).leftMargin = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120, getResources().getDisplayMetrics());
 			btnSubmitNext.invalidate();
 			// disable the button till the animation is not over. don't disable if the pod is complete and there will be no animation			
 			// do the animation only when pod is not complete
-			if(!isThisPodComplete){
+			if(!isThisPodComplete && !isBackButtonPressed){
+				
 				btnSubmitNext.setEnabled(false);
-			// call animation method. This will animate the movement of alien
+				// call animation method. This will animate the movement of alien
 				animateAlienImageView();
-			}else{
+			}			 
+			else{
 				// change the colour of highlighted question
 				questionHighlightedView.setBackgroundColor(Color.parseColor("#8896a3"));
 				((ImageView)findViewById(R.id.alienforquestion)).setVisibility(View.INVISIBLE);
@@ -241,11 +280,16 @@ public class PodQuestionActivity extends BaseActivity {
 			}
 		}
 		else{
+			//hide the back button
+			//enable the back button
+			btnBack.setVisibility(View.INVISIBLE);
 			// Disabled unless one option is selected
 			btnSubmitNext.setEnabled(false);
 			btnSubmitNext.setText("SUBMIT");
 			btnSubmitNext.setBackgroundResource(R.drawable.custom_button_blue);			
 			btnSubmitNext.getLayoutParams().height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
+			btnSubmitNext.getLayoutParams().width = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 180, getResources().getDisplayMetrics());
+			((LinearLayout.LayoutParams)btnSubmitNext.getLayoutParams()).leftMargin = 0;
 			btnSubmitNext.invalidate();
 			explanationContainer.setVisibility(View.GONE);	
 			// show the alien for question
@@ -269,7 +313,8 @@ public class PodQuestionActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				if(isCurrentScreenForExplanation){
-					
+					// set the back button action false
+					isBackButtonPressed = false;
 					//get the number of questions completed
 					// get the current question number for this pod and user id combination
 					LearningpodDbHandler dbHandler = new LearningpodDbHandler(PodQuestionActivity.this);
@@ -299,10 +344,14 @@ public class PodQuestionActivity extends BaseActivity {
 						 			currentSelectedChoiceIndex = idx;
 						 			break;
 						 		}
-						 	}
-							
+						 	}							
+						 	
 						}
+						// if the user clicked on back button and then clicking on next button
+						// and the user is still in a question which he has answered
 						if(currentQuestionIndex<currentQuestionToBeAttempted){
+							// keep this flag as true to avoid animation in next screen
+							isBackButtonPressed = true;
 							isCurrentScreenForExplanation = true;
 							isCurrentSelectedChoiceCorrect =  userProgressTemp.get(currentQuestionIndex).isChoiceCorrect();
 						 	List<QuestionChoiceBean> choices =  questions.get(currentQuestionIndex).getChoiceQuestion().getChoiceInteraction();
@@ -426,41 +475,13 @@ public class PodQuestionActivity extends BaseActivity {
 			choiceViewList.add(choiceView);
 		}
 		
-		// get the previous question button
-		Button btnBack = (Button)findViewById(R.id.btnPrevious);
-		if(currentQuestionIndex==0){
-			btnBack.setVisibility(View.INVISIBLE);
-		}else{
-			btnBack.setVisibility(View.VISIBLE);
-		}
-		btnBack.setOnClickListener(new OnClickListener() {
 		
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				currentQuestionIndex--;
-				isCurrentScreenForExplanation=true;
-				LearningpodDbHandler dbHandler = new LearningpodDbHandler(PodQuestionActivity.this);
-				dbHandler.open();
-				List<UserProgressInfo> userProgressTemp = dbHandler.getUserProgressDetails(ContentCacheStore.getContentCache().getLoggedInUserProfile().getId(), selectedPod.getPodId());
-				dbHandler.close();
-				isCurrentSelectedChoiceCorrect =  userProgressTemp.get(currentQuestionIndex).isChoiceCorrect();
-			 	List<QuestionChoiceBean> choices =  questions.get(currentQuestionIndex).getChoiceQuestion().getChoiceInteraction();
-			 	for(int idx = 0;idx<choices.size();idx++){						 		
-			 		if(choices.get(idx).getChoiceId().equalsIgnoreCase(userProgressTemp.get(currentQuestionIndex).getChoiceId())){
-			 			currentSelectedChoiceIndex = idx;
-			 			break;
-			 		}
-			 	}	
-				showNextQuestion();
-				enableScreenState();
-				
-			}
-		});
 		
 	}	
 	
 	private void showSummaryScreen(){
+		//set the back button to false
+		isBackButtonPressed = false;
 		setContentView(R.layout.summarylayout);
 		TextView goToMapView = (TextView)findViewById(R.id.gotomap);
 		goToMapView.setOnClickListener(new OnClickListener() {

@@ -230,24 +230,24 @@
             </LinearLayout>
             
             <LinearLayout 
-                android:layout_height="50dp"
+                android:layout_height="80dp"
                 android:layout_width="match_parent"
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal">
                 
                  <Button android:layout_width="150dp" 
 	                android:id="@+id/btnPrevious"
-	                android:layout_gravity="center"
-	                android:layout_height="40dp"
-	                android:textSize="20sp"
-	                android:text = "Previous"
-	                android:background="@drawable/custom_button_blue"
+	                android:layout_gravity="right"
+	                android:layout_height="75dp"
+	                android:textSize="18sp"
+	                android:text = "BACK"
+	                android:background="@drawable/previous"
 	                android:textColor="#ffffff"
 	                android:textStyle="bold"	                
-	                android:layout_marginRight="10dp"
+	                android:layout_marginLeft="20dp"
 	                />
                  
-	            <Button android:layout_width="180dp" 
+                  <Button android:layout_width="180dp" 
 	                android:id="@+id/btnsubmitnext"
 	                android:layout_gravity="center"
 	                android:layout_height="40dp"
@@ -255,8 +255,11 @@
 	                android:text = "SUBMIT"
 	                android:background="@drawable/custom_button_blue"
 	                android:textColor="#ffffff"
-	                android:textStyle="bold"	                
+	                android:textStyle="bold"	
+	                android:layout_marginLeft="0dp"                
 	                />
+                 
+	           
             </LinearLayout>
             
         </LinearLayout>

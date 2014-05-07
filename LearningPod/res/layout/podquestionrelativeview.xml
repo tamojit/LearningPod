@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#0B243B" > 
+    android:background="@drawable/bg" > 
    
         
    <LinearLayout android:layout_width="match_parent"
@@ -12,45 +12,8 @@
          android:orientation="vertical">          
     
    <LinearLayout android:layout_width="match_parent"
-       android:layout_height="wrap_content" android:orientation="horizontal" >
+       android:layout_height="60dp" android:orientation="horizontal" >
        
-     <ImageView 
-         android:layout_width="20dp"
-         android:layout_height="30dp"
-         android:visibility = "gone"
-         android:background="@drawable/arrow"
-         android:layout_marginLeft="10dp"
-         android:layout_gravity="center_vertical"/>
-     
-     <TextView 
-         android:id="@+id/gotomap"
-       android:visibility = "gone"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:singleLine="true"
-         android:text = "MAP"
-         android:textColor="#ffffff"
-         android:textSize="24sp"
-         android:textStyle="bold"
-         android:layout_gravity="center_vertical"
-         android:layout_marginLeft="10dp"
-         
-         />
-     
-     <TextView
-	        android:id = "@+id/podname"
-	        android:visibility="gone"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textColor="#ffffff"
-	        android:textSize="22sp"
-	        android:fontFamily="Museo300"
-	        android:layout_marginTop="9dp"
-	        android:layout_marginBottom="5dp"
-	        android:layout_marginLeft="300dp"
-	        android:text = "Context Clues -  Level A"
-	         />
-
        <LinearLayout
            android:id="@+id/questionprogresscontainer"
            android:layout_width="fill_parent"
@@ -218,7 +181,7 @@
 			        android:textSize="20sp" 
 			        android:layout_marginLeft="15dp"
 			        android:layout_marginBottom="3dp"
-			        android:layout_marginTop="20dp"
+			        android:layout_marginTop="0dp"
 			        android:text = "CHOSE THE CORRECT ANSWER"
          		/>
                  

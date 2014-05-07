@@ -74,24 +74,6 @@ public class PodQuestionActivity extends BaseActivity {
 		selectedPod = (PodBean)extras.getSerializable("selectedPod");
 		// get list of all explanations
 		explanations = (ArrayList<ArrayList<ExplanationBean>>)extras.getSerializable("explanations");
-		// set the pod details 
-		TextView podTitleView = (TextView)findViewById(R.id.podname);
-		podTitleView.setText(selectedPod.getTitle());
-		
-		TextView goToMapView = (TextView)findViewById(R.id.gotomap);
-		goToMapView.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(PodQuestionActivity.this,MapActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
-				PodQuestionActivity.this.finish();
-			}
-		});
-		
-		
 		
 		
 		// get the current question number for this pod and user id combination
@@ -114,53 +96,41 @@ public class PodQuestionActivity extends BaseActivity {
 			 showSummaryScreen();
 			 return;
 		}
-		
-		
-		
-		// get the action bar
-		//this.getActionBar().hide();	
-	//	getActionBar().setDisplayShowTitleEnabled(false);
-		//getActionBar().setDisplayShowHomeEnabled(false);
-		// show the first question for this pod
-		ActionBar actionBar = getActionBar();
-		//getActionBar().setTitle(goToMapView.getText().toString());
-		getActionBar().setIcon(R.drawable.arrow);
-		actionBar.setCustomView(R.layout.custm);
-		TextView titl = (TextView) actionBar.getCustomView().findViewById(R.id.title);
-		TextView name = (TextView) actionBar.getCustomView().findViewById(R.id.podname);
-		titl.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(PodQuestionActivity.this,HomeScreenActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
-				PodQuestionActivity.this.finish();
-			}
-		});
-		
-		 //getActionBar().setOnTitleClickListener(new onclickListener() {
-         //  public void onclick(View v) {
-        //	  Intent intent = new Intent(PodQuestionActivity.this,HomeScreenActivity.class);
-			//	intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			//	startActivity(intent);
-			//	PodQuestionActivity.this.finish();
-     //    }
-	  //     });
-		
-	
-		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
-		        | ActionBar.DISPLAY_SHOW_HOME);
-		
-		
-		
+		// get the custom action bar
+		modifyActionBar();
+		// show next question based on current question index
 		showNextQuestion();
 		// enable disable content based on screen state
 		enableScreenState();
 		
 		}
 	
+	private void modifyActionBar(){
+		// get the action bar				
+		ActionBar actionBar = getActionBar();
+		//getActionBar().setTitle(goToMapView.getText().toString());
+		getActionBar().setIcon(R.drawable.arrow);
+		actionBar.setCustomView(R.layout.custm);
+		TextView goToMapButton = (TextView) actionBar.getCustomView().findViewById(R.id.title);
+		TextView podTitle = (TextView) actionBar.getCustomView().findViewById(R.id.podname);
+		podTitle.setText(selectedPod.getTitle());
+		goToMapButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(PodQuestionActivity.this,MapActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+				PodQuestionActivity.this.finish();
+			}
+		});
+				
+		actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+				        | ActionBar.DISPLAY_SHOW_HOME);
+				
+				
+	}
 	private void createProgressBar(List<UserProgressInfo> userProgress){
 		// create the progress dots at the top of the screen
 		// show the progress status in the screen

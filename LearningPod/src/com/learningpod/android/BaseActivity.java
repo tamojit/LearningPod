@@ -3,6 +3,7 @@ package com.learningpod.android;
 import com.learningpod.android.activities.AccountSelectorActivity;
 import com.learningpod.android.activities.HomeScreenActivity;
 import com.learningpod.android.activities.HomeScreenActivityWithSlidingMenu;
+import com.learningpod.android.activities.MapActivity;
 import com.learningpod.android.utility.CustomProgressDialog;
 
 import android.app.Activity;
@@ -52,26 +53,16 @@ public class BaseActivity  extends Activity implements DialogInterface.OnClickLi
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		// TODO Auto-generated method stub
-		if(!((this instanceof AccountSelectorActivity) ||  (this instanceof HomeScreenActivityWithSlidingMenu))){
-			if(item.getItemId()==R.id.homemenu){
-				Intent intent = new Intent(this,HomeScreenActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
-				this.finish();
-			}			
-			else if(item.getItemId()==R.id.help){
-				
-			}
-			else if(item.getItemId()==R.id.about){
-				
-			}
-			else if(item.getItemId()==R.id.terms){
-				
-			}
-			return true;
-		}else{
-			return false;
+		if(item.getItemId()==R.id.help){
+			
 		}
+		else if(item.getItemId()==R.id.about){
+			
+		}
+		else if(item.getItemId()==R.id.terms){
+			
+		}
+		return true;
 	}
 
 	

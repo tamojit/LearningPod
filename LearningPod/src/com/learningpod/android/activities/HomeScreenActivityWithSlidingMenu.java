@@ -241,7 +241,7 @@ public class HomeScreenActivityWithSlidingMenu extends BaseActivity implements O
 		menu.findItem(R.id.terms).setVisible(!drawerOpen);
 		menu.findItem(R.id.help).setVisible(!drawerOpen);
 		menu.findItem(R.id.about).setVisible(!drawerOpen);
-		menu.findItem(R.id.homemenu).setVisible(!drawerOpen);
+		
 		return super.onPrepareOptionsMenu(menu);
 	}
 

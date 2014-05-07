@@ -51,9 +51,14 @@ public class MapActivity extends BaseActivity implements OnClickListener{
 		View mapView2 = inflater.inflate(R.layout.mapview2, null);
 		View mapView3 = inflater.inflate(R.layout.mapview3, null);
 		
-		// add views to the flipper
-		mapFlipper.addView(mapView1,0);
+		// add listeners to next and previous buttons
+		mapView1.findViewById(R.id.btnmap1next).setOnClickListener(this);
+		mapView2.findViewById(R.id.btnmap2next).setOnClickListener(this);
+		mapView2.findViewById(R.id.btnmap2prev).setOnClickListener(this);
+		mapView3.findViewById(R.id.btnmap3prev).setOnClickListener(this);
 		
+		// add views to the flipper
+		mapFlipper.addView(mapView1,0);		
 		mapFlipper.addView(mapView2,1);
 		mapFlipper.addView(mapView3,2);
 		setContentView(mapFlipper);

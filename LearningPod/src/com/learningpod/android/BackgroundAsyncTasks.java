@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.learningpod.android.activities.HomeScreenActivity;
+import com.learningpod.android.activities.MapActivity;
 import com.learningpod.android.activities.HomeScreenActivityWithSlidingMenu;
+import com.learningpod.android.activities.MapActivityBeforeLogin;
 import com.learningpod.android.activities.PodQuestionActivity;
 import com.learningpod.android.beans.UserProfileBean;
 import com.learningpod.android.beans.explanations.ExplanationBean;
@@ -77,7 +78,10 @@ public class BackgroundAsyncTasks extends AsyncTask<BackgroundTasks, Integer, Ob
 			}
 			// get the selected account 
 			Account selectedAccount = (Account)params.get("selectedAccount");
-			
+			// if this is called before login
+			if(selectedAccount==null){
+				return null;
+			}
 			// get the auth token for the selected account
 			String authToken = updateToken(selectedAccount, true);
 			// call google api for getting basic profile information if auth token is retrieved
@@ -145,9 +149,13 @@ public class BackgroundAsyncTasks extends AsyncTask<BackgroundTasks, Integer, Ob
 		// TODO Auto-generated method stub
 		//currentActivity.getProgressDialog().hide();
 		if(result==null){
-			// something went wrong
-			currentActivity.getProgressDialog().hide();
-			return;
+			// handling null specifically for one task
+			if(task!=BackgroundTasks.SELECTED_ACCOUNT_AUTHENTICATION){
+				// something went wrong
+				currentActivity.getProgressDialog().hide();
+				return;
+			}
+			
 		}
 		if(task==BackgroundTasks.SELECTED_ACCOUNT_AUTHENTICATION){
 			UserProfileBean userProfile  = (UserProfileBean) result;
@@ -171,12 +179,18 @@ public class BackgroundAsyncTasks extends AsyncTask<BackgroundTasks, Integer, Ob
 				 Log.e("LearningPod","Error in parsing Pod xml");
 			 }
 			 
-			//parser.parse(iStream);
-			Intent intent = new Intent(currentActivity,HomeScreenActivity.class);
+			Intent intent = null;
+			if(userProfile==null){
+				intent = new Intent(currentActivity,MapActivityBeforeLogin.class);
+			}else{
+				intent = new Intent(currentActivity,MapActivity.class);
+			}
+			
 			// store the pods for later use in cache content
 			ContentCacheStore.getContentCache().setPods(pods);			
 			currentActivity.startActivity(intent);
 			currentActivity.getProgressDialog().hide();
+			currentActivity.finish();
 			
 		}else if(task==BackgroundTasks.LOAD_POD_QUESTIONS){
 			

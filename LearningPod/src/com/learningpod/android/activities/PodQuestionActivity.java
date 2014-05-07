@@ -83,7 +83,7 @@ public class PodQuestionActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(PodQuestionActivity.this,HomeScreenActivity.class);
+				Intent intent = new Intent(PodQuestionActivity.this,MapActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 				PodQuestionActivity.this.finish();
@@ -489,7 +489,7 @@ public class PodQuestionActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(PodQuestionActivity.this,HomeScreenActivity.class);
+				Intent intent = new Intent(PodQuestionActivity.this,MapActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 				PodQuestionActivity.this.finish();

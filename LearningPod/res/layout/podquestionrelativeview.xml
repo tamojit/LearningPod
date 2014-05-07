@@ -17,31 +17,37 @@
      <ImageView 
          android:layout_width="20dp"
          android:layout_height="30dp"
+         android:visibility = "gone"
          android:background="@drawable/arrow"
          android:layout_marginLeft="10dp"
          android:layout_gravity="center_vertical"/>
      
      <TextView 
          android:id="@+id/gotomap"
+       android:visibility = "gone"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
+         android:singleLine="true"
          android:text = "MAP"
          android:textColor="#ffffff"
          android:textSize="24sp"
          android:textStyle="bold"
          android:layout_gravity="center_vertical"
-         android:layout_marginLeft="10dp"/>
+         android:layout_marginLeft="10dp"
+         
+         />
      
      <TextView
 	        android:id = "@+id/podname"
+	        android:visibility="gone"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:textColor="#ffffff"
 	        android:textSize="22sp"
 	        android:fontFamily="Museo300"
-	        android:layout_marginTop="10dp"
-	        android:layout_marginBottom="10dp"
-	        android:layout_marginLeft="280dp"
+	        android:layout_marginTop="9dp"
+	        android:layout_marginBottom="5dp"
+	        android:layout_marginLeft="300dp"
 	        android:text = "Context Clues -  Level A"
 	         />
 
@@ -53,6 +59,8 @@
            android:orientation="horizontal" 
            android:layout_gravity="right"
            android:layout_marginRight="35dp"
+           android:layout_marginTop="10dp"
+	        android:layout_marginBottom="10dp"
            >
 
            

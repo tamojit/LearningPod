@@ -42,10 +42,10 @@ public class BaseActivity  extends Activity implements DialogInterface.OnClickLi
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		if(!(this instanceof AccountSelectorActivity)){
+	if(!(this instanceof AccountSelectorActivity)){
 			getMenuInflater().inflate(R.menu.common_menu, menu);
 		}
-		return true;
+	return true;
 	}
 	
 	

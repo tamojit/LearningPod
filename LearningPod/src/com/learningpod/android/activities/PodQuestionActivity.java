@@ -75,7 +75,8 @@ public class PodQuestionActivity extends BaseActivity {
 		// get list of all explanations
 		explanations = (ArrayList<ArrayList<ExplanationBean>>)extras.getSerializable("explanations");
 		
-		
+		// get the custom action bar
+		modifyActionBar();
 		// get the current question number for this pod and user id combination
 		LearningpodDbHandler dbHandler = new LearningpodDbHandler(this);
 		dbHandler.open();
@@ -96,8 +97,7 @@ public class PodQuestionActivity extends BaseActivity {
 			 showSummaryScreen();
 			 return;
 		}
-		// get the custom action bar
-		modifyActionBar();
+		
 		// show next question based on current question index
 		showNextQuestion();
 		// enable disable content based on screen state
@@ -135,7 +135,7 @@ public class PodQuestionActivity extends BaseActivity {
 		// create the progress dots at the top of the screen
 		// show the progress status in the screen
 		// get the layout container for the progress dots
-		LinearLayout progressLayout = (LinearLayout)findViewById(R.id.questionprogresscontainer);
+		LinearLayout progressLayout = (LinearLayout)findViewById(R.id.questionprogressbarcontainer);
 		// clear the progress layout
 		progressLayout.removeAllViews();
 		//convert the desired dp value to pixel for creating layout parameters
@@ -244,8 +244,11 @@ public class PodQuestionActivity extends BaseActivity {
 				// change the colour of highlighted question
 				questionHighlightedView.setBackgroundColor(Color.parseColor("#8896a3"));
 				((ImageView)findViewById(R.id.alienforquestion)).setVisibility(View.INVISIBLE);
-				((ImageView)findViewById(R.id.alienforexplanation)).setVisibility(View.VISIBLE);				
+				((ImageView)findViewById(R.id.alienforquestionlight)).setVisibility(View.INVISIBLE);
+				((ImageView)findViewById(R.id.alienforexplanation)).setVisibility(View.VISIBLE);
+				((ImageView)findViewById(R.id.alienforexplanationlight)).setVisibility(View.VISIBLE);
 				explanationContainer.setVisibility(View.VISIBLE);
+				explanationContainer.setBackgroundColor(Color.parseColor("#F4FA58"));
 			}
 			
 			ArrayList<ExplanationBean> explanationsForThisQues = explanations.get(currentQuestionIndex);
@@ -303,6 +306,7 @@ public class PodQuestionActivity extends BaseActivity {
 			explanationContainer.setVisibility(View.GONE);	
 			// show the alien for question
 			findViewById(R.id.alienforquestion).setVisibility(View.VISIBLE);
+			findViewById(R.id.alienforquestionlight).setVisibility(View.VISIBLE);
 			// change the color of the highlighted question
 			questionHighlightedView.setBackgroundColor(Color.parseColor("#F4FA58"));
 			// set the  choice label to its default state
@@ -445,7 +449,7 @@ public class PodQuestionActivity extends BaseActivity {
 		}
 		// get the alien image for explanation
 		findViewById(R.id.alienforexplanation).setVisibility(View.INVISIBLE);
-		
+		findViewById(R.id.alienforexplanationlight).setVisibility(View.INVISIBLE);
 		// get Inflater instance
 		LayoutInflater inflater = getLayoutInflater();
 		// get choice container
@@ -489,21 +493,12 @@ public class PodQuestionActivity extends BaseActivity {
 	}	
 	
 	private void showSummaryScreen(){
+		// update the action bar heading
+		((TextView) getActionBar().getCustomView().findViewById(R.id.podname)).setText("Summary Of " + selectedPod.getTitle());
 		//set the back button to false
 		isBackButtonPressed = false;
 		setContentView(R.layout.summarylayout);
-		TextView goToMapView = (TextView)findViewById(R.id.gotomap);
-		goToMapView.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(PodQuestionActivity.this,MapActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
-				PodQuestionActivity.this.finish();
-			}
-		});
+		
 		// as the user has completed this pod, store the user progress in completed object
 		LearningpodDbHandler dbHandler = new LearningpodDbHandler(this);
 		dbHandler.open();
@@ -516,7 +511,7 @@ public class PodQuestionActivity extends BaseActivity {
 		int totalQuestions = userProgressCompleted.size();
 		int correctAnswers = 0;
 		LinearLayout summaryQuesContainer = (LinearLayout)findViewById(R.id.summaryquestioncontainer);
-		((TextView)findViewById(R.id.summarypodname)).setText("Summary of "+ selectedPod.getTitle());
+		//((TextView)findViewById(R.id.summarypodname)).setText("Summary of "+ selectedPod.getTitle());
 		LayoutInflater inflater = getLayoutInflater();
 		for(int idx=0;idx<userProgressCompleted.size();idx++){
 			UserProgressInfo progress = userProgressCompleted.get(idx);
@@ -562,11 +557,16 @@ public class PodQuestionActivity extends BaseActivity {
 		
 		int percentage = (int)((correctAnswers*100/totalQuestions));
 		((TextView)findViewById(R.id.correctpercentage)).setText( percentage + "%");
+		if(percentage==100){
+			findViewById(R.id.star).setVisibility(View.VISIBLE);
+		}
 		
 	}
 	private void animateAlienImageView(){
 		final ImageView alienForQues = (ImageView)findViewById(R.id.alienforquestion);
+		final ImageView alienForQuesLight = (ImageView)findViewById(R.id.alienforquestionlight);
 		final ImageView alienForExp = (ImageView)findViewById(R.id.alienforexplanation);
+		final ImageView alienForExpLight = (ImageView)findViewById(R.id.alienforexplanationlight);
 		int[] origLocation = new int[2];
 		int[] destLocation = new int[2];
 		
@@ -575,8 +575,8 @@ public class PodQuestionActivity extends BaseActivity {
 		alienForQues.requestLayout();
 		alienForQues.invalidate();
 		alienForExp.getLocationOnScreen(destLocation);
-		TranslateAnimation animation = new TranslateAnimation(0,0,0,destLocation[1]-origLocation[1]);
-		animation.setDuration(1000);
+		TranslateAnimation animation = new TranslateAnimation(0,destLocation[0]-origLocation[0],0,destLocation[1]-origLocation[1]);
+		animation.setDuration(3000);
 		animation.setFillAfter(false);
 		//animation.setZAdjustment(Animation.ZORDER_TOP);
 		animation.setAnimationListener(new AnimationListener(){
@@ -586,20 +586,14 @@ public class PodQuestionActivity extends BaseActivity {
 				// TODO Auto-generated method stub
 				alienForQues.clearAnimation();
 				alienForQues.setVisibility(View.INVISIBLE);
+				alienForQuesLight.setVisibility(View.INVISIBLE);
 				alienForExp.setVisibility(View.VISIBLE );
+				alienForExpLight.setVisibility(View.VISIBLE );
 				// show the explanation container and the alien image
 				LinearLayout explanationContainer = (LinearLayout)findViewById(R.id.explanationcontainer);
-			 
-				// code to animate explanation visibility using animate layout changes
-				LayoutParams dummyParams = new  LayoutParams( LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);			
-				View dummyView = new View(PodQuestionActivity.this);				 
-				dummyView.setLayoutParams(dummyParams);
-				dummyView.setVisibility(View.INVISIBLE);
-				explanationContainer.addView(dummyView);	
-				
-			
+			 						
 				// make the explanation container visible 
-				explanationContainer.setVisibility(View.VISIBLE);
+				explanationContainer.setBackgroundColor(Color.parseColor("#F4FA58"));
 				
 				// enable the next/summary button
 				((Button)findViewById(R.id.btnsubmitnext)).setEnabled(true);
@@ -614,10 +608,13 @@ public class PodQuestionActivity extends BaseActivity {
 			@Override
 			public void onAnimationStart(Animation animation) {
 				// TODO Auto-generated method stub
+				// switch off the alien space ship light
+				alienForQuesLight.setVisibility(View.INVISIBLE);
 				// change the colour of highlighted question				
 				TextView questionHighlightedView = (TextView)findViewById(R.id.quesbodyhighlighted);
 				questionHighlightedView.setBackgroundColor(Color.parseColor("#8896a3"));
-				
+				((LinearLayout)findViewById(R.id.explanationcontainer)).setVisibility(View.VISIBLE);
+				((LinearLayout)findViewById(R.id.explanationcontainer)).setBackgroundColor(Color.parseColor("#8896a3"));			
 			}
 			
 		});

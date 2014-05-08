@@ -93,6 +93,7 @@ public class MapActivity extends BaseActivity implements OnClickListener{
 			if(numberOfQuestionsCompleted==pod1.getPodElements().size()){
 				// change the image to the one with the flag
 				imgSpaceshipPlanet1.setVisibility(View.VISIBLE);
+				imgSpaceshipPlanet1.setBackgroundResource(R.drawable.spaceshipwithflag);
 			}else{
 				imgSpaceshipPlanet1.setVisibility(View.VISIBLE);
 				((LinearLayout.LayoutParams)progressBarRedPlanet1.getLayoutParams()).weight = (float)(0.2*numberOfQuestionsCompleted);

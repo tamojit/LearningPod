@@ -63,6 +63,18 @@ public class MapActivityBeforeLogin extends BaseActivity implements OnClickListe
 		((ImageButton)mapView1.findViewById(R.id.planet4)).setOnClickListener(this);
 		((ImageButton)mapView1.findViewById(R.id.planet5)).setOnClickListener(this);
 		
+		((ImageButton)mapView2.findViewById(R.id.planet6)).setOnClickListener(this);
+		((ImageButton)mapView2.findViewById(R.id.planet7)).setOnClickListener(this);
+		((ImageButton)mapView2.findViewById(R.id.planet8)).setOnClickListener(this);
+		((ImageButton)mapView2.findViewById(R.id.planet9)).setOnClickListener(this);
+		((ImageButton)mapView2.findViewById(R.id.planet10)).setOnClickListener(this);
+		
+		((ImageButton)mapView3.findViewById(R.id.planet11)).setOnClickListener(this);
+		((ImageButton)mapView3.findViewById(R.id.planet12)).setOnClickListener(this);
+		((ImageButton)mapView3.findViewById(R.id.planet13)).setOnClickListener(this);
+		((ImageButton)mapView3.findViewById(R.id.planet14)).setOnClickListener(this);
+		((ImageButton)mapView3.findViewById(R.id.planet15)).setOnClickListener(this);
+		
 		// add listeners to next and previous buttons
 		mapView1.findViewById(R.id.btnmap1next).setOnClickListener(this);
 		mapView2.findViewById(R.id.btnmap2next).setOnClickListener(this);
@@ -118,7 +130,7 @@ public class MapActivityBeforeLogin extends BaseActivity implements OnClickListe
     {
 		if(loginWindow.isShowing()){
 			loginWindow.dismiss();
-			return false;
+			return true;
 		}
          switch (touchevent.getAction())
          {
@@ -171,6 +183,23 @@ public class MapActivityBeforeLogin extends BaseActivity implements OnClickListe
 		// go to login screen
 		if(v instanceof ImageButton){
 			loginWindow.showAtLocation(mapFlipper, Gravity.CENTER, 0, 0);
+		}
+		else if (v.getId()==R.id.btnmap1next || v.getId()==R.id.btnmap2next){
+			 // set the required Animation type to mapFlipper
+           // The Next screen will come in form Right and current Screen will go OUT from Left 
+           mapFlipper.setInAnimation(this, R.anim.in_from_right);
+           mapFlipper.setOutAnimation(this, R.anim.out_to_left);
+           // Show The Previous Screen
+           mapFlipper.showNext();
+		}
+		else if (v.getId()==R.id.btnmap2prev || v.getId()==R.id.btnmap3prev){
+			            
+           // set the required Animation type to mapFlipper
+           // The Next screen will come in form Left and current Screen will go OUT from Right 
+           mapFlipper.setInAnimation(this, R.anim.in_from_left);
+           mapFlipper.setOutAnimation(this, R.anim.out_to_right);
+           // Show the previous Screen
+           mapFlipper.showPrevious();
 		}
 		else if(v instanceof TextView){
 		 

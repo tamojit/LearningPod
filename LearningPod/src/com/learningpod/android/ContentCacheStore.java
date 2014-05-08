@@ -10,8 +10,11 @@ public class ContentCacheStore {
 	private static ContentCacheStore contentCacheInstance ;
 	private List<PodBean> pods;
 	private UserProfileBean loggedInUserProfile;
+	private String currentUserEmailId;
 	
 	
+	
+
 	private ContentCacheStore(){}
 	
 	public static ContentCacheStore getContentCache(){
@@ -37,6 +40,12 @@ public class ContentCacheStore {
 		this.loggedInUserProfile = loggedInUserProfile;
 	}
 
-	
+	public String getCurrentUserEmailId() {
+		return currentUserEmailId;
+	}
+
+	public void setCurrentUserEmailId(String currentUserEmailId) {
+		this.currentUserEmailId = currentUserEmailId;
+	}
 
 }

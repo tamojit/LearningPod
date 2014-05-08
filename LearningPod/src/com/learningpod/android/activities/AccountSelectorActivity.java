@@ -11,6 +11,7 @@ import org.brickred.socialauth.android.SocialAuthAdapter.Provider;
 import com.learningpod.android.BackgroundAsyncTasks;
 import com.learningpod.android.BackgroundTasks;
 import com.learningpod.android.BaseActivity;
+import com.learningpod.android.ContentCacheStore;
 import com.learningpod.android.R;
 import com.learningpod.android.beans.UserProfileBean;
 
@@ -100,6 +101,8 @@ public class AccountSelectorActivity extends BaseActivity
 				break;
 			}
 		}
+		// save the email id clicked in content cache
+		ContentCacheStore.getContentCache().setCurrentUserEmailId(selectedAccount.name);
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("selectedAccount", selectedAccount);
 		new BackgroundAsyncTasks(this, params).execute(BackgroundTasks.SELECTED_ACCOUNT_AUTHENTICATION);
@@ -116,7 +119,9 @@ public class AccountSelectorActivity extends BaseActivity
 	    	getProgressDialog().setMessage("Authenticating...");
 	    	getProgressDialog().show();
 	    	Profile profileMap = adapter.getUserProfile();
-	    	// convert profile object to user profile object used in the application
+	    	// save the email id clicked in content cache
+			ContentCacheStore.getContentCache().setCurrentUserEmailId(profileMap.getEmail());
+	    	// convert profile object to user profile object used in the application	    	
 	    	UserProfileBean userProfile = new UserProfileBean();
 	    	userProfile.setName(profileMap.getFullName());
 	    	userProfile.setGender(profileMap.getGender());

@@ -52,8 +52,7 @@ public class MapActivityBeforeLogin extends BaseActivity implements OnClickListe
 		// get Inflater instance
 		LayoutInflater inflater = getLayoutInflater();
 		// inflate and create the Map Views
-		View mapView1 = inflater.inflate(R.layout.mapview1, null);
-		
+		View mapView1 = inflater.inflate(R.layout.mapview1, null);		
 		View mapView2 = inflater.inflate(R.layout.mapview2, null);
 		View mapView3 = inflater.inflate(R.layout.mapview3, null);
 		

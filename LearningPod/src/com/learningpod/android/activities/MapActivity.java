@@ -48,8 +48,8 @@ public class MapActivity extends BaseActivity implements OnClickListener{
 		LayoutInflater inflater = getLayoutInflater();
 		// inflate and create the Map Views
 		View mapView1 = createMap1View();
-		View mapView2 = inflater.inflate(R.layout.mapview2, null);
-		View mapView3 = inflater.inflate(R.layout.mapview3, null);
+		View mapView2 = createMap2View();
+		View mapView3 = createMap3View();
 		
 		// add listeners to next and previous buttons
 		mapView1.findViewById(R.id.btnmap1next).setOnClickListener(this);
@@ -103,8 +103,29 @@ public class MapActivity extends BaseActivity implements OnClickListener{
 			}
 			
 		}
+		
+		// planet2
+		
+		// planet3
+		
+		// planet4
+		
+		// planet5
+		
 		dbHandler.close();
 		return mapView1;
+	}
+	
+	private View createMap2View(){
+		LayoutInflater inflater = getLayoutInflater();
+		View mapView2 = inflater.inflate(R.layout.mapview2, null);
+		return mapView2;
+	}
+	
+	private View createMap3View(){
+		LayoutInflater inflater = getLayoutInflater();
+		View mapView3 = inflater.inflate(R.layout.mapview3, null);
+		return mapView3;
 	}
 	
 	// Method to handle touch event like left to right swap and right to left swap

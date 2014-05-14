@@ -63,14 +63,26 @@ public class PodQuestionActivity extends BaseActivity {
 	// this will hold the user progress once user has completed the pod
 	private List<UserProgressInfo> userProgressCompleted = null; 
 	private boolean isBackButtonPressed = false;
+<<<<<<< HEAD
 	
 	
+=======
+	private Typeface font = null;
+	private Typeface headerFont = null;
+>>>>>>> 9310a1a34003f15712a99c9bbfc6407fdfa0f582
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+<<<<<<< HEAD
 		setContentView(R.layout.podquestionrelativeview);		
+=======
+		setContentView(R.layout.podquestionrelativeview);
+		// create the font face to be used for all texts
+		font = Typeface.createFromAsset(getAssets(), "fonts/PT_Sans-Web-Regular.ttf");
+		headerFont = Typeface.createFromAsset( getAssets(), "fonts/PaytoneOne.ttf");
+>>>>>>> 9310a1a34003f15712a99c9bbfc6407fdfa0f582
 		Bundle extras = getIntent().getExtras();	
 		//get list of pods
 		questions  = (ArrayList<QuestionBean>)extras.getSerializable("questions");
@@ -107,6 +119,10 @@ public class PodQuestionActivity extends BaseActivity {
 		// enable disable content based on screen state
 		enableScreenState();
 		
+<<<<<<< HEAD
+=======
+		
+>>>>>>> 9310a1a34003f15712a99c9bbfc6407fdfa0f582
 		}
 	
 	private void modifyActionBar(){
@@ -118,6 +134,11 @@ public class PodQuestionActivity extends BaseActivity {
 		TextView goToMapButton = (TextView) actionBar.getCustomView().findViewById(R.id.title);
 		TextView podTitle = (TextView) actionBar.getCustomView().findViewById(R.id.podname);
 		podTitle.setText(selectedPod.getTitle());
+<<<<<<< HEAD
+=======
+		
+		podTitle.setTypeface(headerFont);
+>>>>>>> 9310a1a34003f15712a99c9bbfc6407fdfa0f582
 		goToMapButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -147,9 +168,15 @@ public class PodQuestionActivity extends BaseActivity {
 		LinearLayout.LayoutParams progressLayoutParams = new LinearLayout.LayoutParams(progressViewWidthInPx,progressViewWidthInPx);
 		//set the margins after necessary conversions from pixels to dp
 		progressLayoutParams.setMargins((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics())
+<<<<<<< HEAD
 				, (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics())
 				, 0, 0);
 		progressLayoutParams.gravity = Gravity.CENTER;
+=======
+				, (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics())
+				, 0, 0);
+		progressLayoutParams.gravity = Gravity.TOP;
+>>>>>>> 9310a1a34003f15712a99c9bbfc6407fdfa0f582
 				
 		progressDotList.clear();
 		for(int idx=0;idx<questions.size();idx++){
@@ -188,8 +215,16 @@ public class PodQuestionActivity extends BaseActivity {
 		Button btnSubmitNext = (Button)findViewById(R.id.btnsubmitnext);
 		LinearLayout explanationContainer = (LinearLayout)findViewById(R.id.explanationcontainer);
 		TextView explanationContentView = (TextView)findViewById(R.id.explanationcontent);
+<<<<<<< HEAD
 		TextView questionHighlightedView = (TextView)findViewById(R.id.quesbodyhighlighted);
 		
+=======
+		TextView explanationHeaderView = (TextView)findViewById(R.id.explanationheader);		
+		TextView questionHighlightedView = (TextView)findViewById(R.id.quesbodyhighlighted);
+		explanationContentView.setTypeface(font);		
+		explanationHeaderView.setTypeface(headerFont);
+		questionHighlightedView.setTypeface(font);
+>>>>>>> 9310a1a34003f15712a99c9bbfc6407fdfa0f582
 		// get the previous (Back) question button. clicking on the back button will take the user to the previous question in the explanation screen
 		Button btnBack = (Button)findViewById(R.id.btnPrevious);			 
 		btnBack.setOnClickListener(new OnClickListener() {
@@ -259,6 +294,10 @@ public class PodQuestionActivity extends BaseActivity {
 			// get the first explanation			
 			ExplanationBean explanation = explanationsForThisQues.get(0);
 			explanationContentView.setText(Html.fromHtml(explanation.getExplanation().getExplanationBody()));
+<<<<<<< HEAD
+=======
+			
+>>>>>>> 9310a1a34003f15712a99c9bbfc6407fdfa0f582
 			ImageView resultIcon = (ImageView)findViewById(R.id.choiceresulticon);
 			
 			
@@ -266,7 +305,11 @@ public class PodQuestionActivity extends BaseActivity {
 			// Also show the correct/wrong icon in front of the text
 			if(isCurrentSelectedChoiceCorrect){
 				TextView choiceLabelText = (TextView)findViewById(R.id.choicelabel);						
+<<<<<<< HEAD
 				choiceLabelText.setText("Yay! The Correct answer is " + choiceSeqArr[currentSelectedChoiceIndex]);
+=======
+				choiceLabelText.setText("Yay! The correct answer is " + choiceSeqArr[currentSelectedChoiceIndex]);
+>>>>>>> 9310a1a34003f15712a99c9bbfc6407fdfa0f582
 				choiceLabelText.setTextColor(Color.parseColor("#74DF00"));
 				choiceLabelText.setTextSize(20);
 				choiceLabelText.setTypeface(Typeface.DEFAULT_BOLD);
@@ -280,7 +323,11 @@ public class PodQuestionActivity extends BaseActivity {
 				
 			}else{
 				TextView choiceLabelText = (TextView)findViewById(R.id.choicelabel);						
+<<<<<<< HEAD
 				choiceLabelText.setText("Oops! The Correct answer is " + choiceSeqArr[quesToCorrectAnswerMap.get(Integer.valueOf(currentQuestionIndex))]);
+=======
+				choiceLabelText.setText("Oops! The correct answer is " + choiceSeqArr[quesToCorrectAnswerMap.get(Integer.valueOf(currentQuestionIndex))]);
+>>>>>>> 9310a1a34003f15712a99c9bbfc6407fdfa0f582
 				choiceLabelText.setTextColor(Color.parseColor("#e6855b"));
 				choiceLabelText.setTextSize(20);
 				choiceLabelText.setTypeface(Typeface.DEFAULT_BOLD);
@@ -315,7 +362,11 @@ public class PodQuestionActivity extends BaseActivity {
 			questionHighlightedView.setBackgroundColor(Color.parseColor("#F4FA58"));
 			// set the  choice label to its default state
 			TextView choiceLabelText = (TextView)findViewById(R.id.choicelabel);	
+<<<<<<< HEAD
 			choiceLabelText.setText("CHOSE THE CORRECT ANSWER");
+=======
+			choiceLabelText.setText("CHOOSE THE CORRECT ANSWER");
+>>>>>>> 9310a1a34003f15712a99c9bbfc6407fdfa0f582
 			choiceLabelText.setTextColor(Color.parseColor("#ffffff"));
 			choiceLabelText.setTextSize(13);
 			choiceLabelText.setTypeface(Typeface.DEFAULT);
@@ -428,6 +479,10 @@ public class PodQuestionActivity extends BaseActivity {
 		// set the question body
 		TextView questionBodyView = (TextView)findViewById(R.id.quesbody);
 		questionBodyView.setText(Html.fromHtml(nextQuestion.getChoiceQuestion().getQuestionBody().getQuestionBodyStr()));		
+<<<<<<< HEAD
+=======
+		questionBodyView.setTypeface(font);
+>>>>>>> 9310a1a34003f15712a99c9bbfc6407fdfa0f582
 		// get the question highlighted part holder
 		TextView questionBodyHighlightedView = (TextView)findViewById(R.id.quesbodyhighlighted);		
 		// get the image holder
@@ -450,6 +505,11 @@ public class PodQuestionActivity extends BaseActivity {
 			questionBodyHighlightedView.setText(Html.fromHtml((nextQuestion.getChoiceQuestion().getQuestionBody().getQuestionBodyHighlighted())));
 			questionImage.getLayoutParams().height=0;
 			questionBodyHighlightedView.getLayoutParams().height=LayoutParams.WRAP_CONTENT;
+<<<<<<< HEAD
+=======
+			
+			questionBodyHighlightedView.setTypeface(font);
+>>>>>>> 9310a1a34003f15712a99c9bbfc6407fdfa0f582
 		}
 		// get the alien image for explanation
 		findViewById(R.id.alienforexplanation).setVisibility(View.INVISIBLE);

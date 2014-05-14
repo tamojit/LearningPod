@@ -20,8 +20,13 @@
 				        android:textColor="#ffffff"
 				        android:textSize="22sp"  
 				        android:layout_marginLeft="15dp"
+<<<<<<< HEAD
 				        android:layout_marginTop="20dp"
 				        android:layout_marginBottom="20dp"	
+=======
+				        android:layout_marginTop="15dp"
+				        android:layout_marginBottom="15dp"	
+>>>>>>> 9310a1a34003f15712a99c9bbfc6407fdfa0f582
 				        android:textStyle="bold"			        
 				        android:text = "A."
 		         	/>
@@ -33,8 +38,13 @@
 				        android:textColor="#ffffff"
 				        android:textSize="15sp"  
 				        android:layout_marginLeft="15dp"
+<<<<<<< HEAD
 				        android:layout_marginTop="20dp"
 				        android:layout_marginBottom="20dp"				        
+=======
+				        android:layout_marginTop="15dp"
+				        android:layout_marginBottom="15dp"				        
+>>>>>>> 9310a1a34003f15712a99c9bbfc6407fdfa0f582
 				        android:text = "Thoughtful and Serious"
 				        
 		         	/>

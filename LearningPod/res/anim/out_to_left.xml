@@ -2,5 +2,9 @@
     android:shareInterpolator="false">
       <translate android:fromXDelta="0%" android:toXDelta="-100%"
         android:fromYDelta="0%" android:toYDelta="0%"
+<<<<<<< HEAD
         android:duration="1400"/>
+=======
+        android:duration="800"/>
+>>>>>>> 9310a1a34003f15712a99c9bbfc6407fdfa0f582
 </set>

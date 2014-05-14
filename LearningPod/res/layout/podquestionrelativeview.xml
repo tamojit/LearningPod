@@ -112,7 +112,7 @@
                android:layout_width="match_parent"
                android:layout_height="fill_parent"
                android:layout_below="@+id/alienforexplanation"
-               android:layout_marginBottom="5dp"
+               android:layout_marginBottom="0dp"
                android:layout_marginLeft="5dp"
                android:layout_marginRight="5dp"
                android:layout_marginTop="15dp"
@@ -121,6 +121,7 @@
                android:orientation="vertical" >
 
                <TextView
+                   android:id="@+id/explanationheader"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:layout_marginLeft="10dp"

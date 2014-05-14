@@ -63,14 +63,17 @@ public class PodQuestionActivity extends BaseActivity {
 	// this will hold the user progress once user has completed the pod
 	private List<UserProgressInfo> userProgressCompleted = null; 
 	private boolean isBackButtonPressed = false;
-	
-	
+	private Typeface font = null;
+	private Typeface headerFont = null;
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.podquestionrelativeview);		
+		setContentView(R.layout.podquestionrelativeview);
+		// create the font face to be used for all texts
+		font = Typeface.createFromAsset(getAssets(), "fonts/PT_Sans-Web-Regular.ttf");
+		headerFont = Typeface.createFromAsset( getAssets(), "fonts/PaytoneOne.ttf");
 		Bundle extras = getIntent().getExtras();	
 		//get list of pods
 		questions  = (ArrayList<QuestionBean>)extras.getSerializable("questions");
@@ -107,6 +110,7 @@ public class PodQuestionActivity extends BaseActivity {
 		// enable disable content based on screen state
 		enableScreenState();
 		
+		
 		}
 	
 	private void modifyActionBar(){
@@ -118,8 +122,8 @@ public class PodQuestionActivity extends BaseActivity {
 		TextView goToMapButton = (TextView) actionBar.getCustomView().findViewById(R.id.title);
 		TextView podTitle = (TextView) actionBar.getCustomView().findViewById(R.id.podname);
 		podTitle.setText(selectedPod.getTitle());
-		Typeface font = Typeface.createFromAsset( getAssets(), "fonts/PaytoneOne.ttf");
-		podTitle.setTypeface(font);
+		
+		podTitle.setTypeface(headerFont);
 		goToMapButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -190,8 +194,11 @@ public class PodQuestionActivity extends BaseActivity {
 		Button btnSubmitNext = (Button)findViewById(R.id.btnsubmitnext);
 		LinearLayout explanationContainer = (LinearLayout)findViewById(R.id.explanationcontainer);
 		TextView explanationContentView = (TextView)findViewById(R.id.explanationcontent);
+		TextView explanationHeaderView = (TextView)findViewById(R.id.explanationheader);		
 		TextView questionHighlightedView = (TextView)findViewById(R.id.quesbodyhighlighted);
-		
+		explanationContentView.setTypeface(font);		
+		explanationHeaderView.setTypeface(headerFont);
+		questionHighlightedView.setTypeface(font);
 		// get the previous (Back) question button. clicking on the back button will take the user to the previous question in the explanation screen
 		Button btnBack = (Button)findViewById(R.id.btnPrevious);			 
 		btnBack.setOnClickListener(new OnClickListener() {
@@ -261,6 +268,7 @@ public class PodQuestionActivity extends BaseActivity {
 			// get the first explanation			
 			ExplanationBean explanation = explanationsForThisQues.get(0);
 			explanationContentView.setText(Html.fromHtml(explanation.getExplanation().getExplanationBody()));
+			
 			ImageView resultIcon = (ImageView)findViewById(R.id.choiceresulticon);
 			
 			
@@ -430,6 +438,7 @@ public class PodQuestionActivity extends BaseActivity {
 		// set the question body
 		TextView questionBodyView = (TextView)findViewById(R.id.quesbody);
 		questionBodyView.setText(Html.fromHtml(nextQuestion.getChoiceQuestion().getQuestionBody().getQuestionBodyStr()));		
+		questionBodyView.setTypeface(font);
 		// get the question highlighted part holder
 		TextView questionBodyHighlightedView = (TextView)findViewById(R.id.quesbodyhighlighted);		
 		// get the image holder
@@ -452,6 +461,8 @@ public class PodQuestionActivity extends BaseActivity {
 			questionBodyHighlightedView.setText(Html.fromHtml((nextQuestion.getChoiceQuestion().getQuestionBody().getQuestionBodyHighlighted())));
 			questionImage.getLayoutParams().height=0;
 			questionBodyHighlightedView.getLayoutParams().height=LayoutParams.WRAP_CONTENT;
+			
+			questionBodyHighlightedView.setTypeface(font);
 		}
 		// get the alien image for explanation
 		findViewById(R.id.alienforexplanation).setVisibility(View.INVISIBLE);

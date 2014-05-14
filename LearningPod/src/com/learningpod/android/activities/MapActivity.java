@@ -32,6 +32,12 @@ public class MapActivity extends BaseActivity implements OnClickListener{
 	private float lastX;
 	private ViewFlipper mapFlipper;
 	private List<PodBean> pods = null;
+	int[] imgBtnArray={R.id.planet1,R.id.planet2,R.id.planet3,R.id.planet4,R.id.planet5,R.id.planet6,R.id.planet7,R.id.planet8,R.id.planet9,R.id.planet10,R.id.planet11,R.id.planet12,R.id.planet13,R.id.planet14,R.id.planet15};
+	int[] txtPlntArry={R.id.planet1name,R.id.planet2name,R.id.planet3name,R.id.planet4name,R.id.planet5name,R.id.planet6name,R.id.planet7name,R.id.planet8name,R.id.planet9name,R.id.planet10name,R.id.planet11name,R.id.planet12name,R.id.planet13name,R.id.planet14name,R.id.planet15name,};
+	int[] imgViewPlntArry={R.id.planet1ss,R.id.planet2ss,R.id.planet3ss,R.id.planet4ss,R.id.planet5ss,R.id.planet6ss,R.id.planet7ss,R.id.planet8ss,R.id.planet9ss,R.id.planet10ss,R.id.planet11ss,R.id.planet12ss,R.id.planet13ss,R.id.planet14ss,R.id.planet15ss};
+	int[] pbRedArry={R.id.planet1pbred,R.id.planet2pbred,R.id.planet3pbred,R.id.planet4pbred,R.id.planet5pbred,R.id.planet6pbred,R.id.planet7pbred,R.id.planet8pbred,R.id.planet9pbred,R.id.planet10pbred,R.id.planet11pbred,R.id.planet12pbred,R.id.planet13pbred,R.id.planet14pbred,R.id.planet15pbred};
+	int[] pbBlueArry={R.id.planet1pbblue,R.id.planet2pbblue,R.id.planet3pbblue,R.id.planet4pbblue,R.id.planet5pbblue,R.id.planet6pbblue,R.id.planet7pbblue,R.id.planet8pbblue,R.id.planet9pbblue,R.id.planet10pbblue,R.id.planet11pbblue,R.id.planet12pbblue,R.id.planet13pbblue,R.id.planet14pbblue,R.id.planet15pbblue};
+	
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,11 +73,6 @@ public class MapActivity extends BaseActivity implements OnClickListener{
 	}
 	 
 	
-	int[] imgBtnArray={R.id.planet1,R.id.planet2,R.id.planet3,R.id.planet4,R.id.planet5,R.id.planet6,R.id.planet7,R.id.planet8,R.id.planet9,R.id.planet10,R.id.planet11,R.id.planet12,R.id.planet13,R.id.planet14,R.id.planet15};
-	int[] txtPlntArry={R.id.planet1name,R.id.planet2name,R.id.planet3name,R.id.planet4name,R.id.planet5name,R.id.planet6name,R.id.planet7name,R.id.planet8name,R.id.planet9name,R.id.planet10name,R.id.planet11name,R.id.planet12name,R.id.planet13name,R.id.planet14name,R.id.planet15name,};
-	int[] imgViewPlntArry={R.id.planet1ss,R.id.planet2ss,R.id.planet3ss,R.id.planet4ss,R.id.planet5ss,R.id.planet6ss,R.id.planet7ss,R.id.planet8ss,R.id.planet9ss,R.id.planet10ss,R.id.planet11ss,R.id.planet12ss,R.id.planet13ss,R.id.planet14ss,R.id.planet15ss};
-	int[] pbRedArry={R.id.planet1pbred,R.id.planet2pbred,R.id.planet3pbred,R.id.planet4pbred,R.id.planet5pbred,R.id.planet6pbred,R.id.planet7pbred,R.id.planet8pbred,R.id.planet9pbred,R.id.planet10pbred,R.id.planet11pbred,R.id.planet12pbred,R.id.planet13pbred,R.id.planet14pbred,R.id.planet15pbred};
-	int[] pbBlueArry={R.id.planet1pbblue,R.id.planet2pbblue,R.id.planet3pbblue,R.id.planet4pbblue,R.id.planet5pbblue,R.id.planet6pbblue,R.id.planet7pbblue,R.id.planet8pbblue,R.id.planet9pbblue,R.id.planet10pbblue,R.id.planet11pbblue,R.id.planet12pbblue,R.id.planet13pbblue,R.id.planet14pbblue,R.id.planet15pbblue};
 	
 	
 	private View createMap1View(){
@@ -265,9 +266,7 @@ public class MapActivity extends BaseActivity implements OnClickListener{
 			int selectedPlatentId = Integer.parseInt(v.getTag().toString());
 			PodBean selectedPod = pods.get(selectedPlatentId);
 			HashMap<String,Object> params = new HashMap<String,Object>();
-			params.put("selectedPod",selectedPod);
-			Toast.makeText(getApplicationContext(), selectedPod.getTitle()
-					+"\n"+selectedPod.getPodElements().size(), Toast.LENGTH_SHORT).show();
+			params.put("selectedPod",selectedPod);			
 			new BackgroundAsyncTasks(MapActivity.this, params).execute(BackgroundTasks.LOAD_POD_QUESTIONS);
 		}
 		else if (v.getId()==R.id.btnmap1next || v.getId()==R.id.btnmap2next){

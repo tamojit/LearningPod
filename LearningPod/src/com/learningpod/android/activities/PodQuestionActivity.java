@@ -118,6 +118,8 @@ public class PodQuestionActivity extends BaseActivity {
 		TextView goToMapButton = (TextView) actionBar.getCustomView().findViewById(R.id.title);
 		TextView podTitle = (TextView) actionBar.getCustomView().findViewById(R.id.podname);
 		podTitle.setText(selectedPod.getTitle());
+		Typeface font = Typeface.createFromAsset( getAssets(), "fonts/PaytoneOne.ttf");
+		podTitle.setTypeface(font);
 		goToMapButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -147,9 +149,9 @@ public class PodQuestionActivity extends BaseActivity {
 		LinearLayout.LayoutParams progressLayoutParams = new LinearLayout.LayoutParams(progressViewWidthInPx,progressViewWidthInPx);
 		//set the margins after necessary conversions from pixels to dp
 		progressLayoutParams.setMargins((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics())
-				, (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics())
+				, (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics())
 				, 0, 0);
-		progressLayoutParams.gravity = Gravity.CENTER;
+		progressLayoutParams.gravity = Gravity.TOP;
 				
 		progressDotList.clear();
 		for(int idx=0;idx<questions.size();idx++){
@@ -266,7 +268,7 @@ public class PodQuestionActivity extends BaseActivity {
 			// Also show the correct/wrong icon in front of the text
 			if(isCurrentSelectedChoiceCorrect){
 				TextView choiceLabelText = (TextView)findViewById(R.id.choicelabel);						
-				choiceLabelText.setText("Yay! The Correct answer is " + choiceSeqArr[currentSelectedChoiceIndex]);
+				choiceLabelText.setText("Yay! The correct answer is " + choiceSeqArr[currentSelectedChoiceIndex]);
 				choiceLabelText.setTextColor(Color.parseColor("#74DF00"));
 				choiceLabelText.setTextSize(20);
 				choiceLabelText.setTypeface(Typeface.DEFAULT_BOLD);
@@ -280,7 +282,7 @@ public class PodQuestionActivity extends BaseActivity {
 				
 			}else{
 				TextView choiceLabelText = (TextView)findViewById(R.id.choicelabel);						
-				choiceLabelText.setText("Oops! The Correct answer is " + choiceSeqArr[quesToCorrectAnswerMap.get(Integer.valueOf(currentQuestionIndex))]);
+				choiceLabelText.setText("Oops! The correct answer is " + choiceSeqArr[quesToCorrectAnswerMap.get(Integer.valueOf(currentQuestionIndex))]);
 				choiceLabelText.setTextColor(Color.parseColor("#e6855b"));
 				choiceLabelText.setTextSize(20);
 				choiceLabelText.setTypeface(Typeface.DEFAULT_BOLD);
@@ -315,7 +317,7 @@ public class PodQuestionActivity extends BaseActivity {
 			questionHighlightedView.setBackgroundColor(Color.parseColor("#F4FA58"));
 			// set the  choice label to its default state
 			TextView choiceLabelText = (TextView)findViewById(R.id.choicelabel);	
-			choiceLabelText.setText("CHOSE THE CORRECT ANSWER");
+			choiceLabelText.setText("CHOOSE THE CORRECT ANSWER");
 			choiceLabelText.setTextColor(Color.parseColor("#ffffff"));
 			choiceLabelText.setTextSize(13);
 			choiceLabelText.setTypeface(Typeface.DEFAULT);
